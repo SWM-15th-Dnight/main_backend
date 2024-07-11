@@ -6,7 +6,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.24"
 }
 
-group = "com.Dnight"
+group = "com.dnight"
 version = "0.0.1-SNAPSHOT"
 
 java {

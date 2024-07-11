@@ -1,4 +1,4 @@
-package com.Dnight.calinify.auth
+package com.dnight.calinify.auth
 
 class repository {
 }

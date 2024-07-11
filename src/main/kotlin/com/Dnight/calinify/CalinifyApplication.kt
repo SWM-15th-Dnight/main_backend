@@ -1,4 +1,4 @@
-package com.Dnight.calinify
+package com.dnight.calinify
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

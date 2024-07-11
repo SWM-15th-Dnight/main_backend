@@ -1,4 +1,4 @@
-package com.Dnight.calinify.calendar
+package com.dnight.calinify.calendar
 
 class entity {
 }
