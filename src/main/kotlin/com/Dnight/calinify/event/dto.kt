@@ -1,4 +1,4 @@
-package com.Dnight.calinify.event
+package com.dnight.calinify.event
 
 class dto {
 }

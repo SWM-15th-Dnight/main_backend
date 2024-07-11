@@ -1,4 +1,4 @@
-package com.Dnight.calinify.todo
+package com.dnight.calinify.todo
 
 class service {
 }
