@@ -1,10 +1,19 @@
 package com.dnight.calinify.config.basicResponse
 
-class BasicResponse private constructor(header: BasicHeader, data: Any) {
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
+import org.springframework.http.ResponseEntity
 
-    companion object {
-        fun body(code: ResponseCode, content: Any): BasicResponse {
-            return BasicResponse(BasicHeader.createHeader(code.statusCode, code.message), content)
+data class BasicResponse<ResponseDTO> (
+    val data: ResponseDTO?,
+    val statusCode: ResponseCode,
+    ) : ResponseEntity<ResponseDTO>(data, HttpStatusCode.valueOf(statusCode.statusCode)) {
+        companion object {
+            fun ok(data: ResponseDTO, statusCode: ResponseCode): BasicResponse<ResponseDTO> {
+                return BasicResponse(data, statusCode)
+            }
+            fun fail(statusCode: ResponseCode): BasicResponse<ResponseDTO> {
+                return BasicResponse(ErrorResponseDTO(statusCode.message), statusCode)
+            }
         }
     }
-}

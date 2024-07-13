@@ -2,6 +2,7 @@ package com.dnight.calinify.calendar.response
 
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import com.dnight.calinify.calendar.entity.CalendarType
+import com.dnight.calinify.config.basicResponse.ResponseDTO
 import java.time.LocalDateTime
 
 data class CalendarResponseDTO(
@@ -13,7 +14,7 @@ data class CalendarResponseDTO(
     val calendarType : CalendarType,
     val colorId : Int,
     val description : String?,
-) {
+) : ResponseDTO() {
     companion object {
         fun from(calendar: CalendarEntity): CalendarResponseDTO {
             return CalendarResponseDTO(

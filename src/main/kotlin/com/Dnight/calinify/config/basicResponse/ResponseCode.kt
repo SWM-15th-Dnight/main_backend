@@ -1,5 +1,7 @@
 package com.dnight.calinify.config.basicResponse
 
+import org.springframework.http.HttpStatusCode
+
 enum class ResponseCode(val statusCode: Int, val message: String) {
 
     ResponseSuccess(200, "응답 성공"),

@@ -4,8 +4,8 @@ import com.dnight.calinify.calendar.response.CalendarResponseDTO
 import com.dnight.calinify.calendar.service.CalendarService
 import com.dnight.calinify.config.basicResponse.BasicResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.config.basicResponse.ResponseDTO
 import com.dnight.calinify.config.customException.ResourceNotFound
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,12 +17,12 @@ class CalendarController(
     private val calendarService: CalendarService
 ) {
     @GetMapping("/{calendarId}")
-    fun getCalendarById(@PathVariable calendarId : Long) : ResponseEntity<Any> {
+    fun getCalendarById(@PathVariable calendarId : Long) : BasicResponse<ResponseDTO> {
         return try {
             val calendarResponse = calendarService.getCalendarById(calendarId)
-            ResponseEntity.ok().body(calendarResponse)
+            BasicResponse.ok(calendarResponse, ResponseCode.ResponseSuccess)
         } catch (error : ResourceNotFound) {
-            ResponseEntity.status(404).body(error.message)
+            BasicResponse.fail(ResponseCode.NotFound)
         }
     }
 }
