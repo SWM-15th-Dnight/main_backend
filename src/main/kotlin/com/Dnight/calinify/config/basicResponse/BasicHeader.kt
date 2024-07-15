@@ -1,10 +1,8 @@
 package com.dnight.calinify.config.basicResponse
 
-class BasicHeader private constructor(code : Int, message : String) {
-
-    companion object {
-        fun createHeader(statusCode : Int, message: String) : BasicHeader{
-            return BasicHeader(statusCode, message)
-        }
-    }
-}
+/**
+ * 커스텀 헤더.
+ *
+ * 필요시, BasicResponse에 추가하여 활용한다.
+ */
+class BasicHeader (code : Int, message : String) {}
