@@ -1,6 +1,5 @@
 package com.dnight.calinify.calendar.controller
 
-import com.dnight.calinify.calendar.response.CalendarResponseDTO
 import com.dnight.calinify.calendar.service.CalendarService
 import com.dnight.calinify.config.basicResponse.BasicResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
