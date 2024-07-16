@@ -26,29 +26,28 @@ import org.springframework.http.ResponseEntity
  *
  * @author 정인모
  */
-data class BasicResponse<ResponseDTO> (
-    val data: ResponseDTO,
-    val statusCode: ResponseCode,
-    ) : ResponseEntity<ResponseDTO>(data, HttpStatusCode.valueOf(statusCode.statusCode)) {
+data class BasicResponse<T> (
+    val data: T,
+    val responseCode: ResponseCode,
+    ) : ResponseEntity<T>(data, HttpStatusCode.valueOf(responseCode.statusCode)) {
         companion object {
             /**
              * 정상적인 응답일 경우 반환한다.
              *
              * @param data Response의 Body, 내용이 담긴다.
-             * @param statusCode Enum 클래스인 [ResponseCode] 객체의 상황에 맞는 코드를 기입하면 자동으로 정수형의 http 코드가 들어간다.
+             * @param responseCode Enum 클래스인 [ResponseCode] 객체의 상황에 맞는 문자 코드를 기입하면 자동으로 정수형의 http 코드가 들어간다.
              */
-            fun ok(data: ResponseDTO, statusCode: ResponseCode): BasicResponse<ResponseDTO> {
-                return BasicResponse(data, statusCode)
+            fun <T> ok(data: T, responseCode: ResponseCode): BasicResponse<T> {
+                return BasicResponse(data, responseCode)
             }
 
             /**
              * Try - Catch에서 exception이 발생한 경우, 지정된 에러 메시지와 코드를 반환한다.
              *
-             * @param statusCode Enum 클래스 [ResponseCode] 객체에 기입된 메시지와 코드가 자동으로 매핑되어 에러 메시지로 전송된다.
+             * @param responseCode Enum 클래스 [ResponseCode] 객체에 기입된 메시지와 코드가 자동으로 매핑되어 에러 메시지로 전송된다.
              */
-            fun fail(statusCode: ResponseCode): BasicResponse<ResponseDTO> {
-                return BasicResponse(ErrorResponseDTO(statusCode.message), statusCode)
+            fun fail(responseCode: ResponseCode): BasicResponse<ExceptionResponse> {
+                return BasicResponse(ExceptionResponse(responseCode.message), responseCode)
             }
-
         }
     }
