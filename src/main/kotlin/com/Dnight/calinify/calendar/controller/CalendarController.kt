@@ -5,6 +5,8 @@ import com.dnight.calinify.calendar.response.CalendarResponseDTO
 import com.dnight.calinify.calendar.service.CalendarService
 import com.dnight.calinify.config.basicResponse.BasicResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
+import jakarta.validation.Valid
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/calendars")
+@Validated
 class CalendarController(
     private val calendarService: CalendarService
 ) {
@@ -23,7 +26,10 @@ class CalendarController(
     }
 
     @PostMapping("/")
-    fun createCalendar(@RequestBody createCalendarDTO: CalendarCreateDTO): BasicResponse<CalendarResponseDTO> {
+    fun createCalendar(@Valid @RequestBody createCalendarDTO: CalendarCreateDTO): BasicResponse<CalendarResponseDTO> {
+        println(createCalendarDTO.userId::class)
+        println(createCalendarDTO.userId)
+        println(createCalendarDTO.colorId::class)
         val calendarResponse = calendarService.createCalendar(createCalendarDTO)
         return BasicResponse.ok(calendarResponse, ResponseCode.CreateSuccess)
     }
