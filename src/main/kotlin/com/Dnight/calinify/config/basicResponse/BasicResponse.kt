@@ -49,5 +49,12 @@ data class BasicResponse<T> (
             fun fail(responseCode: ResponseCode): BasicResponse<ExceptionResponse> {
                 return BasicResponse(ExceptionResponse(responseCode.message), responseCode)
             }
+
+            /**
+             * request의 값 검증이 실패한 경우, 지정된 에러 메시지와 코드 및 필드 내역을 반환한다.
+             */
+            fun <T>fail(responseCode: ResponseCode, failedValidationData: T): BasicResponse<FailedValidationResponse<T>> {
+                return BasicResponse(FailedValidationResponse(responseCode.message, failedValidationData), responseCode)
+            }
         }
     }
