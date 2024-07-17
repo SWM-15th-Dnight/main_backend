@@ -1,17 +1,25 @@
 package com.dnight.calinify.calendar.request
 
 import com.dnight.calinify.calendar.entity.CalendarType
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotEmpty
-import jakarta.validation.constraints.NotNull
+
 
 data class CalendarCreateDTO(
-    @field:NotEmpty(message="유저 아이디 꼭 좀 넣어줄래?")
-    val userId: Long,
+
+    @field:Min(1, message = "필수 입력 값")
+    val userId : Long,
+
+    @field:NotBlank
     val title: String,
+
     val description: String?,
+
     val timezone: String = "Asia/Seoul",
+
     val calendarType: CalendarType,
-    @field:NotNull
+
+    @field:Min(1) @field:Max(20)
     val colorId: Int,
 )

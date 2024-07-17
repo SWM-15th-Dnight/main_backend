@@ -27,9 +27,6 @@ class CalendarController(
 
     @PostMapping("/")
     fun createCalendar(@Valid @RequestBody createCalendarDTO: CalendarCreateDTO): BasicResponse<CalendarResponseDTO> {
-        println(createCalendarDTO.userId::class)
-        println(createCalendarDTO.userId)
-        println(createCalendarDTO.colorId::class)
         val calendarResponse = calendarService.createCalendar(createCalendarDTO)
         return BasicResponse.ok(calendarResponse, ResponseCode.CreateSuccess)
     }

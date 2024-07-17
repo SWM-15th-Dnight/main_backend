@@ -19,9 +19,9 @@ data class CalendarEntity(
     var calendarType : CalendarType,
     var colorId : Int,
     @CreatedDate
-    var createdAt : LocalDateTime? = LocalDateTime.now(),
+    var createdAt : LocalDateTime = LocalDateTime.now(),
     @LastModifiedDate
-    var updatedAt : LocalDateTime? = LocalDateTime.now(),
+    var updatedAt : LocalDateTime = LocalDateTime.now(),
 ) {
 
     companion object {
