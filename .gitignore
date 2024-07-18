@@ -41,3 +41,6 @@ out/
 
 ### properties ###
 application.properties
+
+### firebase auth ###
+/src/main/resources/firebase.json

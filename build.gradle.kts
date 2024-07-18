@@ -33,6 +33,9 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	// firebase auth
+	implementation("com.google.firebase:firebase-admin:9.2.0")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
 kotlin {
