@@ -11,18 +11,19 @@ import java.time.LocalDateTime
 data class CalendarEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val calendarId : Long? = null,
-    val title : String,
-    val description : String,
     val userId : Long,
-    val timezoneId : String,
-    @CreatedDate
-    val createdAt : LocalDateTime? = null,
-    @LastModifiedDate
-    val updatedAt : LocalDateTime? = null,
+    var title : String,
+    var description : String?,
+    var timezoneId : String,
     @Enumerated(EnumType.STRING)
-    val calendarType : CalendarType,
-    val colorId : Int,
+    var calendarType : CalendarType,
+    var colorId : Int,
+    @CreatedDate
+    var createdAt : LocalDateTime = LocalDateTime.now(),
+    @LastModifiedDate
+    var updatedAt : LocalDateTime = LocalDateTime.now(),
 ) {
+
     companion object {
         fun from(calendar: CalendarCreateDTO) : CalendarEntity {
             return CalendarEntity(

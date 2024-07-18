@@ -47,6 +47,8 @@ enum class ResponseCode(val statusCode: Int, val message: String) {
 
     LargeText(413, "입력한 데이터의 길이가 너무 긺"),
 
+    InputDataNotValid(422, "입력한 데이터의 포맷이 맞지 않음")
+
     // 500 - 서버 에러
     ;
 }
