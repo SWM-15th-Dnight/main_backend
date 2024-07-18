@@ -6,6 +6,7 @@ import com.dnight.calinify.calendar.request.CalendarCreateDTO
 import com.dnight.calinify.calendar.response.CalendarResponseDTO
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.config.exception.ClientException
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,6 +20,7 @@ class CalendarService(private val calendarRepository: CalendarRepository) {
         return calendarResponse
     }
 
+    @Transactional
     fun createCalendar(calendarData: CalendarCreateDTO): CalendarResponseDTO {
         val calendar = CalendarEntity.from(calendarData)
         val createdCalendar = calendarRepository.save(calendar)

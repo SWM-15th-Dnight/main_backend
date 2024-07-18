@@ -38,6 +38,7 @@ enum class ResponseCode(val statusCode: Int, val message: String) {
     Forbidden(403, "접근 권한 없음"),
 
     NotFound(404, "데이터를 찾을 수 없음"),
+    UserNotFound(404, "유저를 찾을 수 없음"),
 
     AlreadyExists(409, "이미 존재하는 데이터"),
     AlreadyExistsUser(409, "이미 존재하는 유저 데이터"),
