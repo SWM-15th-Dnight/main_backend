@@ -22,7 +22,7 @@ class GlobalExceptionHandler {
      * @author 정인모
      */
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun <T> handleValidationExceptions(ex: MethodArgumentNotValidException): BasicResponse<FailedValidationResponse<Map<String, String?>>> {
+    fun handleValidationExceptions(ex: MethodArgumentNotValidException): BasicResponse<FailedValidationResponse<Map<String, String?>>> {
         val errors = mutableMapOf<String, String?>()
         ex.bindingResult.allErrors.forEach { error ->
             val fieldName = (error as FieldError).field

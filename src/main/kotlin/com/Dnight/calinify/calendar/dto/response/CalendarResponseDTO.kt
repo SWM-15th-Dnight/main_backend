@@ -1,5 +1,6 @@
-package com.dnight.calinify.calendar.response
+package com.dnight.calinify.calendar.dto.response
 
+import com.dnight.calinify.calendar.dto.request.CalendarUpdateDTO
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import com.dnight.calinify.calendar.entity.CalendarType
 import java.time.LocalDateTime
@@ -17,7 +18,7 @@ data class CalendarResponseDTO(
     companion object {
         fun from(calendar: CalendarEntity): CalendarResponseDTO {
             return CalendarResponseDTO(
-                calendarId = calendar.calendarId!!,
+                calendarId = calendar.calendarId,
                 calendarType = calendar.calendarType,
                 createdAt = calendar.createdAt,
                 updatedAt = calendar.updatedAt,
