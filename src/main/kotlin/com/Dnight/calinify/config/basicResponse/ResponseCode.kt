@@ -22,10 +22,12 @@ enum class ResponseCode(val statusCode: Int, val message: String) {
     // 200 - 요청 처리 성공
 
     ResponseSuccess(200, "응답 성공"),
-    DeleteSuccess(200, "삭제 성공"),
     UpdateSuccess(200, "업데이트 성공"),
 
     CreateSuccess(201, "리소스 생성 성공"),
+
+
+    DeleteSuccess(204, "리소스 삭제 성공"),
 
 
     // 400 - 클라이언트 에러
