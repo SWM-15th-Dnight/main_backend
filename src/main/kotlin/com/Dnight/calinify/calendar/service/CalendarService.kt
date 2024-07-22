@@ -28,7 +28,7 @@ class CalendarService(private val calendarRepository: CalendarRepository,
     fun createCalendar(calendarData: CalendarCreateDTO): CalendarResponseDTO {
         val user = userRepository.findByIdOrNull(calendarData.userId) ?: throw ClientException(
             ResponseCode.UserNotFound)
-        val calendar = CalendarCreateDTO.from(calendarData, user)
+        val calendar = CalendarCreateDTO.toEntity(calendarData, user)
         val createdCalendar = calendarRepository.save(calendar)
 
         return CalendarResponseDTO.from(createdCalendar)
@@ -38,20 +38,32 @@ class CalendarService(private val calendarRepository: CalendarRepository,
     fun updateCalendar(calendarUpdateData: CalendarUpdateDTO): CalendarResponseDTO {
         val user = userRepository.findByIdOrNull(calendarUpdateData.userId) ?: throw ClientException(
             ResponseCode.UserNotFound)
-        println(calendarUpdateData)
-        val calendar = calendarRepository.findById(calendarUpdateData.calendarId).get()
-        println(calendar)
+
+        val calendar = calendarRepository.findByIdOrNull(calendarUpdateData.calendarId) ?: throw ClientException(
+            ResponseCode.NotFound
+        )
 
         if (calendar.user.userId != user.userId) throw ClientException(ResponseCode.NotYourResource)
 
         calendar.title = calendarUpdateData.title
         calendar.description = calendarUpdateData.description
-        calendar.colorId = calendarUpdateData.colorId
+        calendar.colorSetId = calendarUpdateData.colorSetId
         calendar.timezoneId = calendarUpdateData.timezoneId
-        // ToDo 아직 update가 제대로 먹히고 있는 건지 확인이 어려움
-        // ToDo 유저를 없애낫 파운드서 보내면, 유저 낫 파운드가 아닌, 리소스 가 발생
-        // 필드의 맥스값을 넘거나, 양식에 안 맞는 값이 있으면 에러가 발생하나?
 
         return CalendarResponseDTO.from(calendar)
+    }
+
+    @Transactional
+    fun deleteCalendarById(calendarId: Long, userId: Long): String {
+        val calendar = calendarRepository.findByIdOrNull(calendarId) ?: throw ClientException(ResponseCode.NotFound)
+
+        if (calendar.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
+
+        try {
+            calendar.deleted = 1
+            return calendarId.toString()
+        } catch (e: IllegalArgumentException) {
+            throw ClientException(ResponseCode.NotFound)
+        }
     }
 }
