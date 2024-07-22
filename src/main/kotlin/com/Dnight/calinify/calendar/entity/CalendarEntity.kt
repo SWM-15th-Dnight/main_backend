@@ -1,10 +1,8 @@
 package com.dnight.calinify.calendar.entity
 
+import com.dnight.calinify.config.basicEntity.BasicEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.persistence.*
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "calendars")
@@ -30,10 +28,4 @@ data class CalendarEntity(
 
     @Column(nullable = false)
     var deleted : Short = 0,
-
-    @CreatedDate
-    var createdAt : LocalDateTime = LocalDateTime.now(),
-
-    @LastModifiedDate
-    var updatedAt : LocalDateTime = LocalDateTime.now(),
-)
+) : BasicEntity()

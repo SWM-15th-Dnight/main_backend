@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 data class UserEntity (
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val userId: Long? = null,
-    @Email
+    @Email @Column(nullable = false, unique = true)
     val email: String,
     var userName: String,
     val password: String,
