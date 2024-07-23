@@ -1,8 +1,11 @@
 package com.dnight.calinify.calendar.dto.request
 
 import com.dnight.calinify.calendar.entity.CalendarEntity
+import com.dnight.calinify.common.colorSets.ColorSetsEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotEmpty
 
 data class CalendarUpdateDTO(
     @field:Min(1)
@@ -11,24 +14,14 @@ data class CalendarUpdateDTO(
     @field:Min(1)
     val calendarId : Long,
 
+    @field:NotEmpty
     val title : String,
 
     val description : String?,
 
-    val timezoneId : String,
+    val timezoneId : String = "Asia/Seoul",
 
     var colorSetId : Int,
-) {
-    companion object{
-        fun from(calendarUpdatedData: CalendarUpdateDTO, user: UserEntity) : CalendarEntity {
-            return CalendarEntity(
-                user = user,
-                calendarId = calendarUpdatedData.calendarId,
-                title = calendarUpdatedData.title,
-                description = calendarUpdatedData.description,
-                colorSetId = calendarUpdatedData.colorSetId,
-                timezoneId = calendarUpdatedData.timezoneId
-            )
-        }
-    }
-}
+
+    var deleted : Short
+)
