@@ -8,10 +8,6 @@ spring:
     password: ${LOCAL_DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  firebase:
-    config:
-      path: "src/main/resources/firebase.json"
-
   jpa:
     properties:
       hibernate:
