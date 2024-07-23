@@ -1,6 +1,7 @@
 package com.dnight.calinify.config.exception
 
 import com.dnight.calinify.config.basicResponse.*
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -32,10 +33,36 @@ class GlobalExceptionHandler {
         return BasicResponse.fail(ResponseCode.InputDataNotValid, errors)
     }
 
+    /**
+     * jakarta Validation으로 걸러지지 않는 미상의 Input Data 에러
+     *
+     * @author 정인모
+     */
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleHttpMessageNotReadableException(ex: HttpMessageNotReadableException): BasicResponse<FailedValidationResponse<String>> {
-        val error = ex.localizedMessage.toString()
+        val error = ex.localizedMessage
         return BasicResponse.fail(ResponseCode.InputDataNotValid, error)
+    }
+
+    /**
+     * Unique 제약으로 인해, 데이터를 입력할 수 없는 경우 발생하는 에러
+     *
+     * DB 쿼리 단에서 발생하는 예외이므로, 해당 메시지가 발생했다는 것은 `서비스 단에서 exception처리가 제대로 이루어지지 않았음`을 의미함.
+     *
+     * 당연히 DB의 값과 비교해야 하므로, db에 query가 날아가고, 반환된 query가 에러메시지에 담기므로 exception의 메시지를 반환시킬 수 없다.
+     *
+     * 코드의 기본 메시지 반환한다.
+     *
+     * 다만, unique 제약이 걸린 곳은 한정적이므로, 잘 찾아가면 된다.
+     *
+     * 가능하면 Client exception에서 `ResponseCode.DuplicatedInputData`로 반환될 수 있도록 만들자.
+     *
+     * @author 정인모
+     */
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handleDataIntegrityViolationException(ex: DataIntegrityViolationException): BasicResponse<ExceptionResponse> {
+
+        return BasicResponse.fail(ResponseCode.DuplicatedInputData)
     }
 
     /**
@@ -43,7 +70,7 @@ class GlobalExceptionHandler {
      *
      * 사용 예시:
      *
-     * 추가 부탁 요망
+     * 추가 요망
      *
      * @author 정인모
      */
