@@ -7,13 +7,15 @@ import com.dnight.calinify.user.dto.response.UserCreateResponseDTO
 import com.dnight.calinify.user.dto.response.UserProfileResponseDTO
 import com.dnight.calinify.user.entity.UserEntity
 import com.dnight.calinify.user.repository.UserRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(private val userRepository: UserRepository) {
 
+    @Transactional
     fun createUser(userCreateRequestDTO: UserCreateRequestDTO) : UserCreateResponseDTO {
-        val newUser = UserEntity.from(userCreateRequestDTO)
+        val newUser = UserCreateRequestDTO.toEntity(userCreateRequestDTO)
         userRepository.save(newUser)
         return UserCreateResponseDTO.from(newUser)
     }

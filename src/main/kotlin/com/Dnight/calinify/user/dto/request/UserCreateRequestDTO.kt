@@ -1,5 +1,6 @@
 package com.dnight.calinify.user.dto.request
 
+import com.dnight.calinify.user.entity.UserEntity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.validation.constraints.Email
@@ -16,7 +17,19 @@ data class UserCreateRequestDTO(
     @Enumerated(EnumType.STRING)
     val gender : Gender?,
     val phoneNumber : String?,
-)
+)  {
+    companion object{
+        fun toEntity(userCreateRequestDTO: UserCreateRequestDTO): UserEntity {
+            return UserEntity(
+                email = userCreateRequestDTO.email,
+                password = userCreateRequestDTO.password,
+                userName = userCreateRequestDTO.userName,
+                gender = userCreateRequestDTO.gender,
+                phoneNumber = userCreateRequestDTO.phoneNumber,
+            )
+        }
+    }
+}
 
 enum class Gender{
     male, female

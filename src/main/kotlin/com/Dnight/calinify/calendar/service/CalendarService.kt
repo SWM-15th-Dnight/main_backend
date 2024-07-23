@@ -19,6 +19,11 @@ class CalendarService(private val calendarRepository: CalendarRepository,
     fun getCalendarById(calendarId : Long) : CalendarResponseDTO {
         val calendar : CalendarEntity = calendarRepository.findByIdOrNull(calendarId) ?: throw ClientException(
             ResponseCode.NotFound)
+
+        // TODO 유저의 calendar 소유권한 확인 추가
+
+        if (calendar.equals(1)) throw ClientException(ResponseCode.DeletedResource)
+
         val calendarResponse = CalendarResponseDTO.from(calendar)
 
         return calendarResponse
@@ -49,6 +54,7 @@ class CalendarService(private val calendarRepository: CalendarRepository,
         calendar.description = calendarUpdateData.description
         calendar.colorSetId = calendarUpdateData.colorSetId
         calendar.timezoneId = calendarUpdateData.timezoneId
+        calendar.deleted = calendarUpdateData.deleted
 
         return CalendarResponseDTO.from(calendar)
     }

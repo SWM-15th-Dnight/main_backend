@@ -44,7 +44,7 @@ class CalendarController(
     @DeleteMapping("/{calendarId}")
     fun deleteCalendar(@PathVariable calendarId: Long, @RequestParam userId: Long): BasicResponse<String> {
         val calendarDeleted = calendarService.deleteCalendarById(calendarId, userId)
-        return BasicResponse.ok(calendarDeleted.toString(), ResponseCode.DeleteSuccess)
+        return BasicResponse.ok(calendarDeleted, ResponseCode.DeleteSuccess)
 
     }
 }

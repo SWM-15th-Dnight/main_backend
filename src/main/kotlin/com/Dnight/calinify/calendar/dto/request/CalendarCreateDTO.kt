@@ -1,15 +1,15 @@
 package com.dnight.calinify.calendar.dto.request
 
 import com.dnight.calinify.calendar.entity.CalendarEntity
+import com.dnight.calinify.common.colorSets.ColorSetsEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
-
 data class CalendarCreateDTO(
 
-    @field:Min(1, message = "필수 입력 값")
+    @field:Min(1)
     val userId : Long,
 
     @field:NotBlank
@@ -23,12 +23,12 @@ data class CalendarCreateDTO(
     val colorSetId: Int,
 ) {
     companion object {
-        fun toEntity(calendar: CalendarCreateDTO, user: UserEntity) : CalendarEntity {
+        fun toEntity(calendarCreateDTO: CalendarCreateDTO, user: UserEntity) : CalendarEntity {
             return CalendarEntity(
-                title = calendar.title,
-                description = calendar.description,
-                timezoneId = calendar.timezone,
-                colorSetId = calendar.colorSetId,
+                title = calendarCreateDTO.title,
+                description = calendarCreateDTO.description,
+                timezoneId = calendarCreateDTO.timezone,
+                colorSetId = calendarCreateDTO.colorSetId,
                 user = user
             )
         }
