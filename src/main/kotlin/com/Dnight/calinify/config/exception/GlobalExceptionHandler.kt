@@ -45,24 +45,16 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * Unique 제약으로 인해, 데이터를 입력할 수 없는 경우 발생하는 에러
+     * DB에 걸린 Unique, Fk 등의 제약사항으로 인해 sql query 실행에서 예외가 발생한 경우
      *
-     * DB 쿼리 단에서 발생하는 예외이므로, 해당 메시지가 발생했다는 것은 `서비스 단에서 exception처리가 제대로 이루어지지 않았음`을 의미함.
-     *
-     * 당연히 DB의 값과 비교해야 하므로, db에 query가 날아가고, 반환된 query가 에러메시지에 담기므로 exception의 메시지를 반환시킬 수 없다.
-     *
-     * 코드의 기본 메시지 반환한다.
-     *
-     * 다만, unique 제약이 걸린 곳은 한정적이므로, 잘 찾아가면 된다.
-     *
-     * 가능하면 Client exception에서 `ResponseCode.DuplicatedInputData`로 반환될 수 있도록 만들자.
+     * 서비스 로직을 철저히 짜는 것으로, 해당 예외가 발생하는 것을 최소화하자.
      *
      * @author 정인모
      */
     @ExceptionHandler(DataIntegrityViolationException::class)
     fun handleDataIntegrityViolationException(ex: DataIntegrityViolationException): BasicResponse<ExceptionResponse> {
 
-        return BasicResponse.fail(ResponseCode.DuplicatedInputData)
+        return BasicResponse.fail(ResponseCode.DataSaveFailed)
     }
 
     /**
