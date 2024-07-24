@@ -8,7 +8,6 @@ import com.dnight.calinify.event.entity.EventUID
 import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
@@ -34,7 +33,7 @@ data class EventCreateRequestDTO(
     val location : String? = null,
 
     @field:Size(max = 255)
-    val refeatRule : String? = null,
+    val repeatRule : String? = null,
 
     @field:Min(1)
     val calendarId: Long,
@@ -64,7 +63,7 @@ data class EventCreateRequestDTO(
                 endAt = eventData.endAt,
                 priority = eventData.priority,
                 location = eventData.location,
-                refeatRule = eventData.refeatRule,
+                repeatRule = eventData.repeatRule,
                 calendar = calendar,
                 eventGroupId = eventData.eventGroupId,
                 colorSetId = eventData.colorSetId,

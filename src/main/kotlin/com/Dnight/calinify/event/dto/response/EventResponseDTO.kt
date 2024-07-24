@@ -29,7 +29,7 @@ data class EventResponseDTO(
                 endAt = event.endAt,
                 priority = event.priority,
                 location = event.location,
-                repeatRule = event.refeatRule,
+                repeatRule = event.repeatRule,
                 status = event.status,
                 transp = event.transp,
                 alarmId = event.alarmId
