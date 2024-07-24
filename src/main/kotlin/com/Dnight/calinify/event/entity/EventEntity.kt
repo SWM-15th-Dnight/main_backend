@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "event")
-data class EventEntity(
+open class EventEntity(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val eventId : Long? = 0,
@@ -37,7 +37,7 @@ data class EventEntity(
     var location : String?,
 
     @Column(nullable = true, length = 255)
-    var refeatRule : String? = null,
+    var repeatRule : String? = null,
 
     @Column(nullable = false)
     var isDeleted : Short = 0,

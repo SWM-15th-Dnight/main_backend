@@ -1,7 +1,6 @@
 package com.dnight.calinify.user.entity
 
 import com.dnight.calinify.user.dto.request.Gender
-import com.dnight.calinify.user.dto.request.UserCreateRequestDTO
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
 import org.springframework.data.annotation.CreatedDate
@@ -10,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "user")
-data class UserEntity (
+open class UserEntity (
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val userId: Long? = null,

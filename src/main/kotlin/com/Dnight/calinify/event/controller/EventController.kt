@@ -4,7 +4,6 @@ import com.dnight.calinify.config.basicResponse.BasicResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.event.dto.request.EventCreateRequestDTO
 import com.dnight.calinify.event.dto.response.EventResponseDTO
-import com.dnight.calinify.event.entity.EventEntity
 import com.dnight.calinify.event.service.EventService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,9 +24,10 @@ class EventController(
         return BasicResponse.ok(eventResponse, ResponseCode.ResponseSuccess)
     }
 
-    @PostMapping("/")
-    fun createEvent(@RequestBody eventCreateDTO : EventCreateRequestDTO) {
+    @PostMapping("/form")
+    fun createFormEvent(@RequestBody eventCreateDTO : EventCreateRequestDTO) : BasicResponse<EventResponseDTO> {
         val eventCreateResponse : EventResponseDTO = eventService.createEvent(eventCreateDTO)
 
+        return BasicResponse.ok(eventCreateResponse, ResponseCode.CreateSuccess)
     }
 }

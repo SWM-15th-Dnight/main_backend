@@ -20,9 +20,11 @@ class CalendarService(private val calendarRepository: CalendarRepository,
         val calendar : CalendarEntity = calendarRepository.findByIdOrNull(calendarId) ?: throw ClientException(
             ResponseCode.NotFound)
 
+        val cUser = calendar.user
+
         // TODO 유저의 calendar 소유권한 확인 추가
 
-        if (calendar.equals(1)) throw ClientException(ResponseCode.DeletedResource)
+        if (calendar.deleted.toInt() == 1) throw ClientException(ResponseCode.DeletedResource)
 
         val calendarResponse = CalendarResponseDTO.from(calendar)
 
