@@ -1,6 +1,9 @@
 package com.dnight.calinify.config.exception
 
-import com.dnight.calinify.config.basicResponse.*
+import com.dnight.calinify.config.basicResponse.BasicResponse
+import com.dnight.calinify.config.basicResponse.ExceptionResponse
+import com.dnight.calinify.config.basicResponse.FailedValidationResponse
+import com.dnight.calinify.config.basicResponse.ResponseCode
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
@@ -83,6 +86,21 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(ServerSideException::class)
     fun handleServerSideException(ex: ServerSideException): BasicResponse<ExceptionResponse> {
+        return BasicResponse.fail(ex.responseCode)
+    }
+
+
+    /**
+     * 특수한 작업을 위해, 예외가 발생해도 트랜잭션을 완료하게 만들기 위한 예외
+     *
+     * 사용 예시 :
+     *
+     * 1. ai의 일정데이터 포착 실패로 422 예외를 반환해야 하지만, 실패 로그를 쌓기 위한 경우
+     *
+     * @author 정인모
+     */
+    @ExceptionHandler(DontRollbackException::class)
+    fun handleDontRollbackException(ex: DontRollbackException): BasicResponse<ExceptionResponse> {
         return BasicResponse.fail(ex.responseCode)
     }
 }

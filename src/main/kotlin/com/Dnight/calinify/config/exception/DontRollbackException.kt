@@ -2,6 +2,6 @@ package com.dnight.calinify.config.exception
 
 import com.dnight.calinify.config.basicResponse.ResponseCode
 
-class ClientException(
+class DontRollbackException (
     val responseCode: ResponseCode,
 ) : RuntimeException()
