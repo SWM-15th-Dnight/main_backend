@@ -9,13 +9,13 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "user")
-open class UserEntity (
+class UserEntity (
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val userId: Long? = null,
+    var userId: Long? = null,
 
     @Email @Column(nullable = false, unique = true)
-    val email: String,
+    var email: String,
 
     @Column(nullable = false)
     var userName: String,
@@ -24,13 +24,13 @@ open class UserEntity (
     val password: String,
 
     @CreatedDate
-    val createdAt : LocalDateTime? = LocalDateTime.now(),
+    var createdAt : LocalDateTime? = LocalDateTime.now(),
 
     @LastModifiedDate
-    val updatedAt : LocalDateTime? = LocalDateTime.now(),
+    var updatedAt : LocalDateTime? = LocalDateTime.now(),
 
     @Enumerated(EnumType.STRING)
-    val gender: Gender?,
+    var gender: Gender?,
 
     val phoneNumber: String?
 )

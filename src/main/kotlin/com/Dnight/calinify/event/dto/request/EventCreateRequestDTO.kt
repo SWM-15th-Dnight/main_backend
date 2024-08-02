@@ -42,7 +42,7 @@ data class EventCreateRequestDTO(
     val eventGroupId : Long,
 
     @field:Min(1)
-    val colorSetId : Int,
+    val colorSetId : Int? = null,
 
     @Enumerated(EnumType.STRING)
     val status : EventStatus,
@@ -69,7 +69,7 @@ data class EventCreateRequestDTO(
                 colorSetId = eventData.colorSetId,
                 status = eventData.status,
                 transp = eventData.transp,
-                alarmId = eventData.alarmId
+                alarm = eventData.alarmId
             )
         }
     }

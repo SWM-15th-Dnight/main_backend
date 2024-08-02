@@ -7,10 +7,10 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "event")
-open class EventEntity(
+class EventEntity(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val eventId : Long? = 0,
+    var eventId : Long? = 0,
 
     @Column(nullable = false, unique = true, length = 255)
     val uid : String,
@@ -31,7 +31,7 @@ open class EventEntity(
     var description : String?,
 
     @Column(nullable = false)
-    var priority : Short = 5,
+    var priority : Short? = 5,
 
     @Column(nullable = true, length = 255)
     var location : String?,
@@ -44,24 +44,24 @@ open class EventEntity(
 
     @JoinColumn(name = "calendarId")
     @ManyToOne(fetch = FetchType.LAZY)
-    val calendar : CalendarEntity,
+    var calendar : CalendarEntity,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status : EventStatus,
+    var status : EventStatus = EventStatus.TENTATIVE,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val transp : EventTransp,
+    var transp : EventTransp = EventTransp.OPAQUE,
 
     // TODO 이하 속성들은 추후 Entity 생성 시, 조인 컬럼 설정
     @Column(nullable = true)
-    val eventGroupId : Long,
+    var eventGroupId : Long? = null,
 
     @Column(nullable = true)
-    val alarmId : Long? = null,
+    var alarm : Long? = null,
 
     @Column(nullable = true)
-    var colorSetId : Int,
+    var colorSetId : Int? = null,
 
     ) : BasicEntity()

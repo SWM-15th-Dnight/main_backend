@@ -21,7 +21,7 @@ data class CalendarUpdateDTO(
 
     val timezoneId : String = "Asia/Seoul",
 
-    var colorSetId : Int,
+    val colorSetId : Int,
 
     var deleted : Short
 )
