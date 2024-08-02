@@ -1,6 +1,7 @@
 plugins {
 	id("org.springframework.boot") version "3.3.1"
 	id("io.spring.dependency-management") version "1.1.5"
+	id("org.jetbrains.kotlin.plugin.allopen") version "1.8.0"
 	kotlin("plugin.jpa") version "1.9.24"
 	kotlin("jvm") version "1.9.24"
 	kotlin("plugin.spring") version "1.9.24"
@@ -19,12 +20,23 @@ repositories {
 	mavenCentral()
 }
 
+allOpen {
+	annotation("javax.persistence.Entity")
+	annotation("javax.persistence.MappedSuperclass")
+	annotation("org.springframework.stereotype.Component")
+	annotation("org.springframework.stereotype.Service")
+	annotation("org.springframework.web.bind.annotation.RestController")
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+	testImplementation("io.projectreactor:reactor-test")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 //	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	runtimeOnly("com.mysql:mysql-connector-j")
@@ -33,10 +45,15 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	//WebClient
+	runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.104.Final:osx-aarch_64")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.1")
+
 	// firebase auth
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	testImplementation("org.springframework.security:spring-security-test")
+//	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+//	implementation("org.springframework.boot:spring-boot-starter-security")
+//	testImplementation("org.springframework.security:spring-security-test")
 }
 
 kotlin {
