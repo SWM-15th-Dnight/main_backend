@@ -1,0 +1,50 @@
+package com.dnight.calinify.ai_process.entity
+
+import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import java.time.LocalDateTime
+
+@Entity
+@Table(name = "ai_processing_event")
+data class AiProcessingEventEntity(
+
+    @Id
+    val aiProcessingEventId : Long? = 0,
+
+    @Column(nullable = false, length = 50)
+    val summary : String,
+
+    @Column(nullable = false)
+    val startAt : LocalDateTime,
+
+    @Column(nullable = false)
+    val endAt : LocalDateTime,
+
+    @Column(nullable = true, length = 2047)
+    val description : String? = null,
+
+    @Column(nullable = true, length = 255)
+    val location : String? = null,
+
+    @Column(nullable = true, length = 255)
+    val repeatRule : String? = null
+) {
+    companion object {
+        fun from(eventProcessedStatisticsId : Long,
+                 aiPlainTextProcessedResponseDTO: AiPlainTextProcessedResponseDTO
+        ) : AiProcessingEventEntity {
+            return AiProcessingEventEntity(
+                aiProcessingEventId = eventProcessedStatisticsId,
+                summary = aiPlainTextProcessedResponseDTO.summary,
+                startAt = aiPlainTextProcessedResponseDTO.start!!,
+                endAt = aiPlainTextProcessedResponseDTO.end!!,
+                description = aiPlainTextProcessedResponseDTO.description,
+                location = aiPlainTextProcessedResponseDTO.location,
+                repeatRule = aiPlainTextProcessedResponseDTO.repeatRule,
+            )
+        }
+    }
+}
