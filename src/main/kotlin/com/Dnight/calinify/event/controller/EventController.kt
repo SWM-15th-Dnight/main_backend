@@ -5,12 +5,7 @@ import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.event.dto.request.EventCreateRequestDTO
 import com.dnight.calinify.event.dto.response.EventResponseDTO
 import com.dnight.calinify.event.service.EventService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/v1/event")
@@ -29,5 +24,10 @@ class EventController(
         val eventCreateResponse : EventResponseDTO = eventService.createEvent(eventCreateDTO)
 
         return BasicResponse.ok(eventCreateResponse, ResponseCode.CreateSuccess)
+    }
+
+    @PostMapping("/plainText")
+    fun createPlainTextEvent(@RequestBody eventCreateDTO: PlainTextEventCreateRequestDTO){
+
     }
 }

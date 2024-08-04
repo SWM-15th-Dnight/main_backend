@@ -1,12 +1,12 @@
 package com.dnight.calinify.event.dto.response
 
+import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO
 import com.dnight.calinify.event.entity.EventEntity
 import com.dnight.calinify.event.entity.EventStatus
 import com.dnight.calinify.event.entity.EventTransp
-import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO
 import java.time.LocalDateTime
 
-data class EventResponseDTO(
+class EventResponseDTO(
     val eventId : Long,
     val summary : String,
     val description : String? = null,

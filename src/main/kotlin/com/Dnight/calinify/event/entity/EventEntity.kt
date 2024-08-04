@@ -1,5 +1,6 @@
 package com.dnight.calinify.event.entity
 
+import com.dnight.calinify.ai_process.entity.AiProcessingStatisticsEntity
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import com.dnight.calinify.config.basicEntity.BasicEntity
 import jakarta.persistence.*
@@ -63,5 +64,13 @@ class EventEntity(
 
     @Column(nullable = true)
     var colorSetId : Int? = null,
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ai_processing_statistics_id")
+    var aiProcessingStatistics: AiProcessingStatisticsEntity? = null,
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "ai_processing_event_statistics_id")
+//    val aiProcessingEventStatistics: AiProcessingStatisticsEntity
 
     ) : BasicEntity()

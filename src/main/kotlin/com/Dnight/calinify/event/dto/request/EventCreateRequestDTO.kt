@@ -1,5 +1,6 @@
 package com.dnight.calinify.event.dto.request
 
+import com.dnight.calinify.ai_process.entity.AiProcessingStatisticsEntity
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import com.dnight.calinify.event.entity.EventEntity
 import com.dnight.calinify.event.entity.EventStatus
@@ -13,7 +14,7 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 
-data class EventCreateRequestDTO(
+open class EventCreateRequestDTO(
     @field:NotEmpty
     val summary: String,
 
@@ -50,9 +51,15 @@ data class EventCreateRequestDTO(
     @Enumerated(EnumType.STRING)
     val transp : EventTransp,
 
-    val alarmId : Long? = null
+    val alarmId : Long? = null,
+
+    @field:Min(1)
+    val aiProcessingStatisticsId : Long? = null,
 ) {
     companion object {
+        /**
+         * aiProcessingStatisticsId가 존재하지 않는, Form으로 생성된 이벤트의 Entity를 만드는 메서드
+         */
         fun toEntity(eventData : EventCreateRequestDTO,
                      calendar : CalendarEntity) : EventEntity {
             return EventEntity(
@@ -69,7 +76,35 @@ data class EventCreateRequestDTO(
                 colorSetId = eventData.colorSetId,
                 status = eventData.status,
                 transp = eventData.transp,
-                alarm = eventData.alarmId
+                alarm = eventData.alarmId,
+            )
+        }
+
+        /**
+         * ai processing을 거쳐, aiProcessingStatisticsId를 함께 던져준 상태에서 적용.
+         *
+         * statistics 객체를 넣느냐 마느냐가 ai 답변인지 가르는 분기 플래그가 됨.
+         */
+
+        fun toEntity(eventData : EventCreateRequestDTO,
+                     calendar : CalendarEntity,
+                     aiProcessingStatisticsEntity: AiProcessingStatisticsEntity) : EventEntity {
+            return EventEntity(
+                uid = EventUID.genUID(),
+                summary = eventData.summary,
+                description = eventData.description,
+                startAt = eventData.startAt,
+                endAt = eventData.endAt,
+                priority = eventData.priority,
+                location = eventData.location,
+                repeatRule = eventData.repeatRule,
+                calendar = calendar,
+                eventGroupId = eventData.eventGroupId,
+                colorSetId = eventData.colorSetId,
+                status = eventData.status,
+                transp = eventData.transp,
+                alarm = eventData.alarmId,
+                aiProcessingStatistics = aiProcessingStatisticsEntity
             )
         }
     }

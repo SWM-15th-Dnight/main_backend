@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "event_history")
-data class EventHistoryEntity(
+class EventHistoryEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val eventHistoryId: Long? = 0,
 
