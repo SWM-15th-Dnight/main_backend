@@ -63,14 +63,16 @@ class GlobalExceptionHandler {
     /**
      * client(사용자 및 프론트엔드 단)측의 잘못으로 처리된 예외
      *
-     * 사용 예시:
-     *
-     * 추가 요망
+     * 대부분의 비즈니스 로직에서 클라이언트에서 잘못된 값이 들어오거나 값 검증이 실패할 경우 발생할 예외
      *
      * @author 정인모
      */
     @ExceptionHandler(ClientException::class)
     fun handleClientException(ex: ClientException): BasicResponse<ExceptionResponse> {
+        if (ex.detail == null) {
+            return BasicResponse.fail(ex.responseCode)
+        }
+        ex.responseCode.message += "->" + ex.detail
         return BasicResponse.fail(ex.responseCode)
     }
 

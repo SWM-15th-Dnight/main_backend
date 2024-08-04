@@ -17,7 +17,7 @@ package com.dnight.calinify.config.basicResponse
  *
  * @author 정인모
  */
-enum class ResponseCode(val statusCode: Int, val message: String) {
+enum class ResponseCode(val statusCode: Int, var message: String) {
 
     // 200 - 요청 처리 성공
 
