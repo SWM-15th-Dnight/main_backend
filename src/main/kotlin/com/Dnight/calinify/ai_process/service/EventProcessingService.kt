@@ -6,8 +6,6 @@ import com.dnight.calinify.ai_process.dto.to_ai.request.AiPlainTextProcessingReq
 import com.dnight.calinify.ai_process.dto.to_ai.request.AiRequestDTO
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO
-import com.dnight.calinify.ai_process.entity.AiProcessingEventEntity
-import com.dnight.calinify.ai_process.entity.AiProcessingStatisticsEntity
 import com.dnight.calinify.ai_process.repository.AiProcessingEventRepository
 import com.dnight.calinify.ai_process.repository.AiProcessingStatisticsRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
@@ -61,7 +59,7 @@ class EventProcessingService(
     fun createPlainTextEvent(plainTextProcessingRequestDTO: PlainTextProcessingRequestDTO) : ProcessedEventResponseDTO{
 
         // DTO로부터 ai server에 전달할 내용을 정제
-        val aiPlainTextProcessingRequestDTO = AiPlainTextProcessingRequestDTO.from(plainTextProcessingRequestDTO)
+        val aiPlainTextProcessingRequestDTO = AiPlainTextProcessingRequestDTO.toEntity(plainTextProcessingRequestDTO)
 
         // ai server request
         val aiPlainTextProcessedResponseDTO = aiRequest(aiPlainTextProcessingRequestDTO, AiPlainTextProcessedResponseDTO::class)
@@ -74,7 +72,7 @@ class EventProcessingService(
         val userEntity = userRepository.findByIdOrNull(1) ?: throw ClientException(ResponseCode.UserNotFound)
 
         // 통계 객체 생성
-        val eventProcessedStatisticsEntity = AiProcessingStatisticsEntity.from(userEntity, processedResponseBody, plainTextProcessingRequestDTO)
+        val eventProcessedStatisticsEntity = AiPlainTextProcessedResponseDTO.toStatisticsEntity(userEntity, processedResponseBody, plainTextProcessingRequestDTO)
 
         // 일정 정보 파악 실패 시 예외 발생
         if (aiPlainTextProcessedResponseDTO.statusCode.isSameCodeAs(HttpStatus.ACCEPTED)) {
@@ -88,7 +86,7 @@ class EventProcessingService(
         val eventProcessingId : Long = eventStatisticsEntity.aiProcessingStatisticsId!!
 
         // 성공했을 시, processing event 삽입 (실제 유저 event 반영 x)
-        val processingEventEntity = AiProcessingEventEntity.from(eventProcessingId, processedResponseBody)
+        val processingEventEntity = AiPlainTextProcessedResponseDTO.toEventEntity(eventProcessingId, processedResponseBody)
         aiProcessingEventRepository.save(processingEventEntity)
 
         // 프로세싱 결과에 statistics, event id를 삽입하여 반환

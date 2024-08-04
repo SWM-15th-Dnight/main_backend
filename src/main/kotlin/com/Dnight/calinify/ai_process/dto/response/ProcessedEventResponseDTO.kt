@@ -3,7 +3,7 @@ package com.dnight.calinify.ai_process.dto.response
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
 import java.time.LocalDateTime
 
-data class ProcessedEventResponseDTO(
+class ProcessedEventResponseDTO(
     val processedEventId : Long,
     val summary : String,
     val start : LocalDateTime,

@@ -1,14 +1,11 @@
 package com.dnight.calinify.ai_process.entity
 
-import com.dnight.calinify.ai_process.dto.request.PlainTextProcessingRequestDTO
-import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
-import com.dnight.calinify.event.entity.EventEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "ai_processing_statistics")
-data class AiProcessingStatisticsEntity(
+class AiProcessingStatisticsEntity(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val aiProcessingStatisticsId: Long? = 0,
@@ -39,25 +36,4 @@ data class AiProcessingStatisticsEntity(
     // 성공을 기본값으로 잡는다.
     @Column(nullable = false)
     var isSuccess : Short = 1,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = true)
-    var eventId: EventEntity? = null
-) {
-    fun addEventId(eventId: EventEntity) {
-        this.eventId = eventId
-    }
-
-    companion object {
-        fun from(userEntity : UserEntity, aiPlainTextProcessedResponseDTO: AiPlainTextProcessedResponseDTO, inputData: PlainTextProcessingRequestDTO): AiProcessingStatisticsEntity {
-            return AiProcessingStatisticsEntity(
-                user = userEntity,
-                inputOriginText = inputData.originText,
-                promptId = inputData.promptId,
-                inputType = inputData.inputType,
-                responseTime = aiPlainTextProcessedResponseDTO.responseTime,
-                usedToken = aiPlainTextProcessedResponseDTO.usedToken,
-            )
-        }
-    }
-}
+)

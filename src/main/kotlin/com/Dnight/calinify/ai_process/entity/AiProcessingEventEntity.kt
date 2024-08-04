@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "ai_processing_event")
-data class AiProcessingEventEntity(
+class AiProcessingEventEntity(
 
     @Id
     val aiProcessingEventId : Long? = 0,
@@ -31,20 +31,4 @@ data class AiProcessingEventEntity(
 
     @Column(nullable = true, length = 255)
     val repeatRule : String? = null
-) {
-    companion object {
-        fun from(eventProcessedStatisticsId : Long,
-                 aiPlainTextProcessedResponseDTO: AiPlainTextProcessedResponseDTO
-        ) : AiProcessingEventEntity {
-            return AiProcessingEventEntity(
-                aiProcessingEventId = eventProcessedStatisticsId,
-                summary = aiPlainTextProcessedResponseDTO.summary,
-                startAt = aiPlainTextProcessedResponseDTO.start!!,
-                endAt = aiPlainTextProcessedResponseDTO.end!!,
-                description = aiPlainTextProcessedResponseDTO.description,
-                location = aiPlainTextProcessedResponseDTO.location,
-                repeatRule = aiPlainTextProcessedResponseDTO.repeatRule,
-            )
-        }
-    }
-}
+)
