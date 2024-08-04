@@ -7,7 +7,7 @@ import jakarta.persistence.*
 data class ColorSetsEntity(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val colorSetId : Long = 0,
+    val colorSetId : Int = 0,
 
     @Column(nullable = false, length = 20)
     val colorName : String,
