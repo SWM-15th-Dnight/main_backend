@@ -25,9 +25,4 @@ class EventController(
 
         return BasicResponse.ok(eventCreateResponse, ResponseCode.CreateSuccess)
     }
-
-    @PostMapping("/plainText")
-    fun createPlainTextEvent(@RequestBody eventCreateDTO: PlainTextEventCreateRequestDTO){
-
-    }
 }
