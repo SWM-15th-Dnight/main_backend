@@ -13,7 +13,7 @@ class EventResponseDTO(
     val description : String? = null,
     val startAt : LocalDateTime,
     val endAt : LocalDateTime,
-    val priority : Short?,
+    val priority : Int?,
     val location : String? = null,
     val repeatRule : String? = null,
     val status : EventStatus,

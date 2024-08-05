@@ -12,6 +12,7 @@ import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.event.dto.EventHistoryDTO
 import com.dnight.calinify.event.dto.EventStatisticsDTO
 import com.dnight.calinify.event.dto.request.EventCreateRequestDTO
+import com.dnight.calinify.event.dto.request.EventUpdateRequestDTO
 import com.dnight.calinify.event.dto.response.EventResponseDTO
 import com.dnight.calinify.event.repository.EventHistoryRepository
 import com.dnight.calinify.event.repository.EventRepository
@@ -87,7 +88,7 @@ class EventService(
         val eventResponseDTO = EventResponseDTO.from(eventEntity)
 
         // History 추가
-        val eventHistoryEntity = EventHistoryDTO.toEntity(eventResponseDTO, eventEntity)
+        val eventHistoryEntity = EventHistoryDTO.toEntity(eventEntity)
         try {
             eventHistoryRepository.save(eventHistoryEntity)
         } catch (ex: Exception) {
@@ -103,5 +104,50 @@ class EventService(
         }
 
         return eventResponseDTO
+    }
+
+    @Transactional
+    fun updateEvent(eventUpdateDTO : EventUpdateRequestDTO) : Long {
+        val eventEntity = eventRepository.findByIdOrNull(eventUpdateDTO.eventId)
+            ?: throw ClientException(ResponseCode.NotFound)
+
+        // event group이 존재할 경우
+        if (eventUpdateDTO.eventGroupId is Long) {
+            eventEntity.eventGroup = eventGroupRepository.findByIdOrNull(eventUpdateDTO.eventGroupId)
+                ?: throw ClientException(ResponseCode.NotFound, "event group")
+        } else {
+            eventEntity.eventGroup = null
+        }
+
+        // event calendar 변경
+        eventEntity.calendar = calendarRepository.findByIdOrNull(eventUpdateDTO.calendarId)
+            ?: throw ClientException(ResponseCode.NotFound, "calendar")
+
+        // 필수값
+        eventEntity.startAt = eventUpdateDTO.startAt
+        eventEntity.endAt = eventUpdateDTO.endAt
+        eventEntity.status = eventUpdateDTO.status
+        eventEntity.transp = eventUpdateDTO.transp
+        eventEntity.priority = eventUpdateDTO.priority
+
+        // 선택값
+        eventEntity.description = eventUpdateDTO.description
+        eventEntity.location = eventUpdateDTO.location
+        eventEntity.repeatRule = eventUpdateDTO.repeatRule
+        eventEntity.colorSetId = eventUpdateDTO.colorSetId
+
+        // 수정횟수 등록
+        eventEntity.sequence += 1
+
+        // History 등록
+        val eventHistoryEntity = EventHistoryDTO.toEntity(eventEntity)
+
+        try {
+            eventHistoryRepository.save(eventHistoryEntity)
+        } catch (ex : Exception) {
+            throw ClientException(ResponseCode.DataSaveFailed, "event history save failed")
+        }
+
+        return eventEntity.eventId!!
     }
 }

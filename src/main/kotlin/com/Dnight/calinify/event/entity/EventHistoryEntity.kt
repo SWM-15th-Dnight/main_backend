@@ -30,7 +30,7 @@ class EventHistoryEntity(
     val description : String? = null,
 
     @Column(nullable = false)
-    val priority: Short? = 5,
+    val priority: Int? = 5,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
