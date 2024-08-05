@@ -27,4 +27,5 @@ class CalendarEntity(
 
     @Column(nullable = false)
     var deleted : Short = 0,
-) : BasicEntity()
+) : BasicEntity(){
+}

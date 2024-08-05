@@ -1,10 +1,10 @@
 package com.dnight.calinify.calendar.service
 
-import com.dnight.calinify.calendar.entity.CalendarEntity
-import com.dnight.calinify.calendar.repository.CalendarRepository
 import com.dnight.calinify.calendar.dto.request.CalendarCreateDTO
 import com.dnight.calinify.calendar.dto.request.CalendarUpdateDTO
 import com.dnight.calinify.calendar.dto.response.CalendarResponseDTO
+import com.dnight.calinify.calendar.entity.CalendarEntity
+import com.dnight.calinify.calendar.repository.CalendarRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.user.repository.UserRepository
@@ -13,14 +13,15 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class CalendarService(private val calendarRepository: CalendarRepository,
-    private val userRepository: UserRepository) {
-
+class CalendarService(
+    private val calendarRepository: CalendarRepository,
+    private val userRepository: UserRepository
+) {
+    @Transactional
     fun getCalendarById(calendarId : Long) : CalendarResponseDTO {
-        val calendar : CalendarEntity = calendarRepository.findByIdOrNull(calendarId) ?: throw ClientException(
-            ResponseCode.NotFound)
 
-        val cUser = calendar.user
+        val calendar : CalendarEntity = calendarRepository.findByIdOrNull(calendarId)
+            ?: throw ClientException(ResponseCode.NotFound)
 
         // TODO 유저의 calendar 소유권한 확인 추가
 
