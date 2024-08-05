@@ -1,6 +1,9 @@
 package com.dnight.calinify.config.exception
 
-import com.dnight.calinify.config.basicResponse.*
+import com.dnight.calinify.config.basicResponse.BasicResponse
+import com.dnight.calinify.config.basicResponse.ExceptionResponse
+import com.dnight.calinify.config.basicResponse.FailedValidationResponse
+import com.dnight.calinify.config.basicResponse.ResponseCode
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.validation.FieldError
@@ -45,37 +48,33 @@ class GlobalExceptionHandler {
     }
 
     /**
-     * Unique 제약으로 인해, 데이터를 입력할 수 없는 경우 발생하는 에러
+     * DB에 걸린 Unique, Fk 등의 제약사항으로 인해 sql query 실행에서 예외가 발생한 경우
      *
-     * DB 쿼리 단에서 발생하는 예외이므로, 해당 메시지가 발생했다는 것은 `서비스 단에서 exception처리가 제대로 이루어지지 않았음`을 의미함.
-     *
-     * 당연히 DB의 값과 비교해야 하므로, db에 query가 날아가고, 반환된 query가 에러메시지에 담기므로 exception의 메시지를 반환시킬 수 없다.
-     *
-     * 코드의 기본 메시지 반환한다.
-     *
-     * 다만, unique 제약이 걸린 곳은 한정적이므로, 잘 찾아가면 된다.
-     *
-     * 가능하면 Client exception에서 `ResponseCode.DuplicatedInputData`로 반환될 수 있도록 만들자.
+     * 서비스 로직을 철저히 짜는 것으로, 해당 예외가 발생하는 것을 최소화하자.
      *
      * @author 정인모
      */
     @ExceptionHandler(DataIntegrityViolationException::class)
     fun handleDataIntegrityViolationException(ex: DataIntegrityViolationException): BasicResponse<ExceptionResponse> {
 
-        return BasicResponse.fail(ResponseCode.DuplicatedInputData)
+        return BasicResponse.fail(ResponseCode.DataSaveFailed)
     }
 
     /**
      * client(사용자 및 프론트엔드 단)측의 잘못으로 처리된 예외
      *
-     * 사용 예시:
+     * 대부분의 비즈니스 로직에서 클라이언트에서 잘못된 값이 들어오거나 값 검증이 실패할 경우 발생할 예외
      *
-     * 추가 요망
+     * clientException에 detail String을 추가할 경우, 해당 string을 message에 추가해 반환
      *
      * @author 정인모
      */
     @ExceptionHandler(ClientException::class)
     fun handleClientException(ex: ClientException): BasicResponse<ExceptionResponse> {
+        ex.detail ?:
+        return BasicResponse.fail(ex.responseCode)
+
+        ex.responseCode.message += "->" + ex.detail
         return BasicResponse.fail(ex.responseCode)
     }
 
@@ -91,6 +90,21 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(ServerSideException::class)
     fun handleServerSideException(ex: ServerSideException): BasicResponse<ExceptionResponse> {
+        return BasicResponse.fail(ex.responseCode)
+    }
+
+
+    /**
+     * 특수한 작업을 위해, 예외가 발생해도 트랜잭션을 완료하게 만들기 위한 예외
+     *
+     * 사용 예시 :
+     *
+     * 1. ai의 일정데이터 포착 실패로 422 예외를 반환해야 하지만, 실패 로그를 쌓기 위한 경우
+     *
+     * @author 정인모
+     */
+    @ExceptionHandler(DontRollbackException::class)
+    fun handleDontRollbackException(ex: DontRollbackException): BasicResponse<ExceptionResponse> {
         return BasicResponse.fail(ex.responseCode)
     }
 }

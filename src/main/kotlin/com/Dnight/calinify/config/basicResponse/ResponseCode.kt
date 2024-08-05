@@ -17,7 +17,7 @@ package com.dnight.calinify.config.basicResponse
  *
  * @author 정인모
  */
-enum class ResponseCode(val statusCode: Int, val message: String) {
+enum class ResponseCode(val statusCode: Int, var message: String) {
 
     // 200 - 요청 처리 성공
 
@@ -49,10 +49,15 @@ enum class ResponseCode(val statusCode: Int, val message: String) {
 
     LargeText(413, "입력한 데이터의 길이가 너무 긺"),
 
+    EventDataNotCaptured(422, "이벤트 데이터 포착 실패"),
+
     InputDataNotValid(422, "입력한 데이터의 포맷이 맞지 않음"),
 
-    DuplicatedInputData(422, "중복된 데이터");
+    DuplicatedInputData(422, "중복된 데이터"),
 
     // 500 - 서버 에러
+    DataSaveFailed(500, "데이터 저장 실패"),
+
+    AiRequestFail(500, "Ai 서버와 통신 실패")
     ;
 }

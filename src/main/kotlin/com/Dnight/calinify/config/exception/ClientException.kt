@@ -4,5 +4,5 @@ import com.dnight.calinify.config.basicResponse.ResponseCode
 
 class ClientException(
     val responseCode: ResponseCode,
-    override val message: String = responseCode.message,
+    val detail : String? = null,
 ) : RuntimeException()

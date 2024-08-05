@@ -2,7 +2,7 @@ package com.dnight.calinify.user.dto.response
 
 import com.dnight.calinify.user.entity.UserEntity
 
-data class UserCreateResponseDTO(
+class UserCreateResponseDTO(
     val userName: String,
     val email: String,
 ) {

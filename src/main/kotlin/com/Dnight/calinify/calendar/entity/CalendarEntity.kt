@@ -6,8 +6,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "calendars")
-data class CalendarEntity(
-
+class CalendarEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val calendarId : Long = 0,
 
@@ -28,4 +27,5 @@ data class CalendarEntity(
 
     @Column(nullable = false)
     var deleted : Short = 0,
-) : BasicEntity()
+) : BasicEntity(){
+}

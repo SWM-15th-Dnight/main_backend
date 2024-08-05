@@ -3,7 +3,7 @@ package com.dnight.calinify.calendar.dto.response
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import java.time.LocalDateTime
 
-data class CalendarResponseDTO(
+class CalendarResponseDTO(
     val calendarId : Long,
     val title : String,
     val timezoneId : String,

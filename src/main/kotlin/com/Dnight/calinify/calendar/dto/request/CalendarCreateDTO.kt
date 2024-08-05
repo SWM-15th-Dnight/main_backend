@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
-data class CalendarCreateDTO(
+class CalendarCreateDTO(
 
     @field:Min(1)
     val userId : Long,
