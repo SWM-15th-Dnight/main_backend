@@ -65,13 +65,15 @@ class GlobalExceptionHandler {
      *
      * 대부분의 비즈니스 로직에서 클라이언트에서 잘못된 값이 들어오거나 값 검증이 실패할 경우 발생할 예외
      *
+     * clientException에 detail String을 추가할 경우, 해당 string을 message에 추가해 반환
+     *
      * @author 정인모
      */
     @ExceptionHandler(ClientException::class)
     fun handleClientException(ex: ClientException): BasicResponse<ExceptionResponse> {
-        if (ex.detail == null) {
-            return BasicResponse.fail(ex.responseCode)
-        }
+        ex.detail ?:
+        return BasicResponse.fail(ex.responseCode)
+
         ex.responseCode.message += "->" + ex.detail
         return BasicResponse.fail(ex.responseCode)
     }

@@ -22,12 +22,12 @@ class AlarmService(
     }
 
     @Transactional
-    fun createAlarm(alarmCreateRequestDTO: AlarmCreateRequestDTO) : AlarmResponseDTO {
+    fun createAlarm(alarmCreateRequestDTO: AlarmCreateRequestDTO) : Long {
         val alarmEntity = AlarmCreateRequestDTO.toEntity(alarmCreateRequestDTO)
 
         val createdAlarm = alarmRepository.save(alarmEntity)
 
-        return AlarmResponseDTO.from(createdAlarm)
+        return createdAlarm.alarmId!!
     }
 
     @Transactional

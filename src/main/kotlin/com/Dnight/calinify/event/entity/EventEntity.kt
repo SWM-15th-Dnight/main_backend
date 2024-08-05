@@ -1,8 +1,10 @@
 package com.dnight.calinify.event.entity
 
 import com.dnight.calinify.ai_process.entity.AiProcessingStatisticsEntity
+import com.dnight.calinify.alarm.entity.AlarmEntity
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import com.dnight.calinify.config.basicEntity.BasicEntity
+import com.dnight.calinify.event_group.entity.EventGroupEntity
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -55,22 +57,20 @@ class EventEntity(
     @Column(nullable = false)
     var transp : EventTransp = EventTransp.OPAQUE,
 
-    // TODO 이하 속성들은 추후 Entity 생성 시, 조인 컬럼 설정
-    @Column(nullable = true)
-    var eventGroupId : Long? = null,
+    @JoinColumn(name = "event_group_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    var eventGroup : EventGroupEntity? = null,
 
-    @Column(nullable = true)
-    var alarm : Long? = null,
+    @JoinColumn(name = "alarm_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    var alarm : AlarmEntity? = null,
 
+    // 아무리 생각해도 id만 넘겨주고, 색상 관련된 데이터는 FE가 갖고 있는 걸로
     @Column(nullable = true)
     var colorSetId : Int? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_processing_statistics_id")
     var aiProcessingStatistics: AiProcessingStatisticsEntity? = null,
-
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "ai_processing_event_statistics_id")
-//    val aiProcessingEventStatistics: AiProcessingStatisticsEntity
 
     ) : BasicEntity()

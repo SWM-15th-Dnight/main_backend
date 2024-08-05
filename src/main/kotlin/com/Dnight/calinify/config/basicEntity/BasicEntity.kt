@@ -1,6 +1,5 @@
 package com.dnight.calinify.config.basicEntity
 
-import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass
 import org.springframework.data.annotation.CreatedDate

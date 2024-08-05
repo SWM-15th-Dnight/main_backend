@@ -1,14 +1,14 @@
 package com.dnight.calinify.user.dto.response
 
-import com.dnight.calinify.user.dto.request.Gender
+import com.dnight.calinify.user.dto.request.GenderEnum
 import com.dnight.calinify.user.entity.UserEntity
 
-data class UserProfileResponseDTO(
+class UserProfileResponseDTO(
     val userId : Long,
     val userName: String,
     val email: String,
     val phoneNumber: String?,
-    val gender: Gender?,
+    val gender: GenderEnum?,
 ) {
     companion object {
         fun from(user: UserEntity) : UserProfileResponseDTO {

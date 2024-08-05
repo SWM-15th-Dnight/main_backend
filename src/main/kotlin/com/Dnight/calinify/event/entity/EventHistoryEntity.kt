@@ -24,7 +24,7 @@ class EventHistoryEntity(
     val endAt : LocalDateTime,
 
     @LastModifiedDate
-    val updatedAt: LocalDateTime,
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(nullable = false, length = 2047)
     val description : String? = null,
@@ -45,22 +45,4 @@ class EventHistoryEntity(
 
     @Column(nullable = false)
     val repeatRule : String? = null
-) {
-    companion object {
-        fun from(event : EventEntity) : EventHistoryEntity {
-            return EventHistoryEntity(
-                event = event,
-                summary = event.summary,
-                startAt = event.startAt,
-                endAt = event.endAt,
-                description = event.description,
-                priority = event.priority,
-                status = event.status,
-                transp = event.transp,
-                location = event.location,
-                repeatRule = event.repeatRule,
-                updatedAt = event.updatedAt
-            )
-        }
-    }
-}
+)

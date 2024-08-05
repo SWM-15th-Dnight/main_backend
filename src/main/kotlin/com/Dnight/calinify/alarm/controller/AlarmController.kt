@@ -25,10 +25,10 @@ class AlarmController(
     }
 
     @PostMapping("/")
-    fun createAlarm(@Valid @RequestBody alarmCreateRequestDTO: AlarmCreateRequestDTO) : BasicResponse<AlarmResponseDTO>{
-        val alarm = alarmService.createAlarm(alarmCreateRequestDTO)
+    fun createAlarm(@Valid @RequestBody alarmCreateRequestDTO: AlarmCreateRequestDTO) : BasicResponse<Long>{
+        val alarmId = alarmService.createAlarm(alarmCreateRequestDTO)
 
-        return BasicResponse.ok(alarm, ResponseCode.CreateSuccess)
+        return BasicResponse.ok(alarmId, ResponseCode.CreateSuccess)
     }
 
     @PutMapping("/")

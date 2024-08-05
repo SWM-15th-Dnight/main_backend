@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 class ProcessedEventResponseDTO(
     val processedEventId : Long,
     val summary : String,
-    val start : LocalDateTime,
-    val end : LocalDateTime,
+    val startAt : LocalDateTime,
+    val endAt : LocalDateTime,
     val responseTime : Float,
     val usedToken : Int,
     val location : String?,
@@ -20,8 +20,8 @@ class ProcessedEventResponseDTO(
             return ProcessedEventResponseDTO(
                 processedEventId = processedEventId,
                 summary = processedResponseBody.summary,
-                start = processedResponseBody.start!!,
-                end = processedResponseBody.end!!,
+                startAt = processedResponseBody.start!!,
+                endAt = processedResponseBody.end!!,
                 responseTime = processedResponseBody.responseTime,
                 usedToken = processedResponseBody.usedToken,
                 location = processedResponseBody.location,

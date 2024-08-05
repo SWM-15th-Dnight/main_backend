@@ -1,6 +1,5 @@
 package com.dnight.calinify.ai_process.entity
 
-import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

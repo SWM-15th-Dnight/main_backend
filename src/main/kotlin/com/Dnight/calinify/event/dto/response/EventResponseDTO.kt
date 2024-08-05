@@ -1,6 +1,7 @@
 package com.dnight.calinify.event.dto.response
 
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO
+import com.dnight.calinify.alarm.dto.response.AlarmResponseDTO
 import com.dnight.calinify.event.entity.EventEntity
 import com.dnight.calinify.event.entity.EventStatus
 import com.dnight.calinify.event.entity.EventTransp
@@ -17,8 +18,8 @@ class EventResponseDTO(
     val repeatRule : String? = null,
     val status : EventStatus,
     val transp : EventTransp,
-    // TODO 알람 추가
-    val alarmId : Long? = null
+//    val eventGroup : EventGroupEntity? = null,
+    val alarm : AlarmResponseDTO? = null
 ): AiResponseDTO() {
     companion object {
         fun from(event: EventEntity) : EventResponseDTO {
@@ -33,7 +34,9 @@ class EventResponseDTO(
                 repeatRule = event.repeatRule,
                 status = event.status,
                 transp = event.transp,
-                alarmId = event.alarm
+                alarm = event.alarm?.let { AlarmResponseDTO.from(it) },
+//                eventGroup = event.eventGroup?.let { EventGroupResponseDTO.from(it) }
+//                alarm = if (event.alarm != null) AlarmResponseDTO.from(event.alarm!!) else null
             )
         }
     }

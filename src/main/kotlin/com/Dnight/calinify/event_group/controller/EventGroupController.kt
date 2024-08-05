@@ -17,7 +17,6 @@ class EventGroupController(
 ) {
     @GetMapping("/{eventGroupId}")
     fun getEventGroupById(@PathVariable eventGroupId: Long) : BasicResponse<EventGroupResponseDTO> {
-
         val eventGroup = eventGroupService.getEventGroupById(eventGroupId)
 
         return BasicResponse.ok(eventGroup, ResponseCode.ResponseSuccess)
@@ -39,4 +38,10 @@ class EventGroupController(
         return BasicResponse.ok("OK", ResponseCode.UpdateSuccess)
     }
 
+    @DeleteMapping("/{eventGroupId}")
+    fun deleteEventGroup(@PathVariable eventGroupId: Long) : BasicResponse<String> {
+        eventGroupService.deleteEventGroup(eventGroupId)
+
+        return BasicResponse.ok("OK", ResponseCode.DeleteSuccess)
+    }
 }

@@ -55,4 +55,12 @@ class EventGroupService(
         eventGroupEntity.groupName = eventGroupUpdateRequestDTO.groupName
         eventGroupEntity.description = eventGroupUpdateRequestDTO.description
     }
+
+    @Transactional
+    fun deleteEventGroup(eventGroupId: Long) {
+
+        val eventGroupEntity = eventGroupRepository.findByIdOrNull(eventGroupId) ?: throw ClientException(ResponseCode.NotFound)
+
+        eventGroupRepository.delete(eventGroupEntity)
+    }
 }
