@@ -36,4 +36,11 @@ class EventController(
 
         return BasicResponse.ok(eventId, ResponseCode.UpdateSuccess)
     }
+
+    @DeleteMapping("/{eventId}")
+    fun deleteEvent(@PathVariable eventId: Long): BasicResponse<Long> {
+        val deletedEventID = eventService.deleteEvent(eventId)
+
+        return BasicResponse.ok(deletedEventID, ResponseCode.DeleteSuccess)
+    }
 }

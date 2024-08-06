@@ -150,4 +150,15 @@ class EventService(
 
         return eventEntity.eventId!!
     }
+
+    @Transactional
+    fun deleteEvent(eventId : Long) : Long {
+
+        // 실제 삭제는 배치 또는 값 검사를 통해?
+        val event = eventRepository.findByIdOrNull(eventId) ?: throw ClientException(ResponseCode.NotFound)
+
+        event.isDeleted = 1
+
+        return eventId
+    }
 }
