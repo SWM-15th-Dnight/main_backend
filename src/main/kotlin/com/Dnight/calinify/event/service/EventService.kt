@@ -38,7 +38,6 @@ class EventService(
     fun getEventById(eventId : Long) : EventResponseDTO {
 
         val event = eventRepository.findByIdOrNull(eventId) ?: throw ClientException(ResponseCode.NotFound)
-
         val eventResponseDTO = EventResponseDTO.from(event)
 
         return eventResponseDTO

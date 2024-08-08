@@ -18,11 +18,17 @@ class UserEntity (
     @Column(nullable = false)
     var userName: String,
 
-    @Column(nullable = false)
-    val password: String,
+    @Column(nullable = true)
+    val password: String? = null,
 
     @Enumerated(EnumType.STRING)
-    var gender: GenderEnum?,
+    var gender: GenderEnum? = null,
 
-    val phoneNumber: String?
+    val phoneNumber: String? = null,
+
+    @OneToOne(cascade = [(CascadeType.ALL)])
+    @JoinColumn(name = "account_link_id")
+    val accountLink : AccountLinkEntity,
+
+    val isActivated : Short = 1
 ) : BasicEntity()
