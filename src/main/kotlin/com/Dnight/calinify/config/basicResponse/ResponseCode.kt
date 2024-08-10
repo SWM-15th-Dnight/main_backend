@@ -34,8 +34,10 @@ enum class ResponseCode(val statusCode: Int, var message: String) {
 
     ImpassableDate(400, "불가능한 날짜에 입력 / 조회"),
 
-    Unauthorized(401, "인증이 없음 필요함"),
+    Unauthorized(401, "인증이 없음"),
     DisallowedToken(401, "토큰이 만료됨"),
+    FailedLogin(401, "로그인 Email, 비밀번호가 맞지 않음"),
+
     NotYourResource(403, "해당 유저의 데이터가 아님"),
     Forbidden(403, "접근 권한 없음"),
 
