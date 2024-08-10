@@ -77,7 +77,6 @@ class JwtTokenProvider {
     }
 
     private fun getClaims(token: String) : Claims {
-        println(token)
         return Jwts.parserBuilder()
             .setSigningKey(key)
             .build()
@@ -104,6 +103,8 @@ class JwtTokenProvider {
         val authorities : Collection<GrantedAuthority> = (auth as String)
             .split(",")
             .map { SimpleGrantedAuthority(it) }
+
+        // @AuthenticationPrincipal 을 통해 controller에서 가져올 수 있는 값
         val principal : UserDetails = User(claims.subject, "", authorities)
 
         return UsernamePasswordAuthenticationToken(principal, "", authorities)
