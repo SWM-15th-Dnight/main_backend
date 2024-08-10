@@ -47,14 +47,23 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+
 	//WebClient
 	runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.104.Final:osx-aarch_64")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.1")
 
+	// jwt
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+	// BCrypt
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
 	// firebase auth
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-//	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 //	testImplementation("org.springframework.security:spring-security-test")
 }
 

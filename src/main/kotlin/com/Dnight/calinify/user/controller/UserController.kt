@@ -2,17 +2,13 @@ package com.dnight.calinify.user.controller
 
 import com.dnight.calinify.config.basicResponse.BasicResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.user.dto.request.GoogleUserCreateDTO
 import com.dnight.calinify.user.dto.request.UserCreateRequestDTO
 import com.dnight.calinify.user.dto.response.UserCreateResponseDTO
 import com.dnight.calinify.user.dto.response.UserProfileResponseDTO
 import com.dnight.calinify.user.service.UserService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -22,6 +18,13 @@ class UserController(val userService: UserService) {
     fun createUser(@Valid @RequestBody userCreateDTO: UserCreateRequestDTO) : BasicResponse<UserCreateResponseDTO> {
         val newUser = userService.createUser(userCreateDTO)
         return BasicResponse.ok(newUser, ResponseCode.CreateSuccess)
+    }
+
+    @PostMapping("/google")
+    fun createGoogleUser(@Valid @RequestBody googleUserCreateDTO: GoogleUserCreateDTO) :BasicResponse<UserCreateResponseDTO> {
+        val newGoogleUser = userService.createGoogleUser(googleUserCreateDTO)
+
+        return BasicResponse.ok(newGoogleUser, ResponseCode.CreateSuccess)
     }
 
     @GetMapping("/{userId}")

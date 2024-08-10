@@ -14,7 +14,7 @@ class EventStatisticsEntity(
     var eventStatisticsId: Long? = null,
 
     @NotNull
-    var inputTypeId: Short,
+    var inputTypeId: Int,
 
     @Column(name = "input_time_taken")
     var inputTimeTaken: Float

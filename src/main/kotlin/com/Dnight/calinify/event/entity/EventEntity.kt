@@ -34,7 +34,7 @@ class EventEntity(
     var description : String?,
 
     @Column(nullable = false)
-    var priority : Short? = 5,
+    var priority : Int? = 5,
 
     @Column(nullable = true, length = 255)
     var location : String?,
@@ -43,7 +43,7 @@ class EventEntity(
     var repeatRule : String? = null,
 
     @Column(nullable = false)
-    var isDeleted : Short = 0,
+    var isDeleted : Int = 0,
 
     @JoinColumn(name = "calendarId")
     @ManyToOne(fetch = FetchType.LAZY)

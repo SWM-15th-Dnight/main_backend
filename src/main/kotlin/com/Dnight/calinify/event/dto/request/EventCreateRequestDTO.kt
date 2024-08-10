@@ -11,12 +11,10 @@ import com.dnight.calinify.event.entity.EventUID
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
+import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
-import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
 class EventCreateRequestDTO(
@@ -36,9 +34,10 @@ class EventCreateRequestDTO(
     @Schema(description = "일정에 대한 부가 설명")
     val description : String?,
 
-    @field:Size(min = 1, max= 9)
+    @field:Min(1)
+    @field:Max(9)
     @Schema(description = "일정의 중요도. 1-9이며 입력이 없으면 기본값 5", defaultValue = "5")
-    val priority : Short = 5,
+    val priority : Int = 5,
 
     @field:Size(max = 255)
     @Schema(description = "일정의 장소")
@@ -72,7 +71,7 @@ class EventCreateRequestDTO(
 
     @Schema(description = "사용자가 사용한 input 방식, 1:Form, 2:PlainText")
     @field:Min(1)
-    val inputTypeId: Short,
+    val inputTypeId: Int,
 
     @field:Min(0)
     @Schema(description = "사용자가 일정을 등록하는 데에 활용한 종합 시간. 클라이언트에서 집계 후 전송")
