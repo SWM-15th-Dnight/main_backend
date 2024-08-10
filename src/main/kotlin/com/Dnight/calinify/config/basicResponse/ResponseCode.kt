@@ -23,6 +23,7 @@ enum class ResponseCode(val statusCode: Int, var message: String) {
 
     ResponseSuccess(200, "응답 성공"),
     UpdateSuccess(200, "업데이트 성공"),
+    RequestSuccess(200, "요청 - 응답 성공"),
 
     CreateSuccess(201, "리소스 생성 성공"),
 
