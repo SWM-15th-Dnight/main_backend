@@ -6,6 +6,7 @@ import com.dnight.calinify.config.basicResponse.FailedValidationResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.core.AuthenticationException
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -58,6 +59,12 @@ class GlobalExceptionHandler {
     fun handleDataIntegrityViolationException(ex: DataIntegrityViolationException): BasicResponse<ExceptionResponse> {
 
         return BasicResponse.fail(ResponseCode.DataSaveFailed)
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handleAuthenticationException(ex: AuthenticationException): BasicResponse<ExceptionResponse> {
+
+        return BasicResponse.fail(ResponseCode.FailedLogin)
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.dnight.calinify.user.dto.response
+package com.dnight.calinify.auth.dto.response
 
 import com.dnight.calinify.user.entity.UserEntity
 

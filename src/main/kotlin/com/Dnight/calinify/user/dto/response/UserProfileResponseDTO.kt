@@ -1,6 +1,6 @@
 package com.dnight.calinify.user.dto.response
 
-import com.dnight.calinify.user.dto.request.GenderEnum
+import com.dnight.calinify.auth.dto.request.GenderEnum
 import com.dnight.calinify.user.entity.UserEntity
 
 class UserProfileResponseDTO(
