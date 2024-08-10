@@ -1,7 +1,7 @@
 package com.dnight.calinify.user.entity
 
+import com.dnight.calinify.auth.dto.request.GenderEnum
 import com.dnight.calinify.config.basicEntity.BasicEntity
-import com.dnight.calinify.user.dto.request.GenderEnum
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
 
@@ -26,9 +26,11 @@ class UserEntity (
 
     val phoneNumber: String? = null,
 
-    @OneToOne(cascade = [(CascadeType.ALL)])
-    @JoinColumn(name = "account_link_id")
-    val accountLink : AccountLinkEntity,
+    @OneToOne
+    @JoinColumn(name = "account_link_id", nullable = true)
+    val accountLink : AccountLinkEntity? = null,
 
-    val isActivated : Short = 1
+    val isActivated : Short = 1,
+
+    val role: String = "COMMON"
 ) : BasicEntity()

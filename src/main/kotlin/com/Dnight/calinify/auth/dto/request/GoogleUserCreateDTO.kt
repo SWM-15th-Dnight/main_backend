@@ -1,4 +1,4 @@
-package com.dnight.calinify.user.dto.request
+package com.dnight.calinify.auth.dto.request
 
 import com.dnight.calinify.user.entity.AccountLinkEntity
 import com.dnight.calinify.user.entity.UserEntity
