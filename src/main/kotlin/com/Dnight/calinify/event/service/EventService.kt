@@ -31,25 +31,30 @@ class EventService(
     private val calendarRepository: CalendarRepository,
     private val eventHistoryRepository: EventHistoryRepository,
     private val aiProcessingStatisticsRepository: AiProcessingStatisticsRepository,
+    private val eventStatisticsRepository: EventStatisticsRepository,
 
     private val alarmService: AlarmService,
-    private val eventStatisticsRepository: EventStatisticsRepository,
 ) {
-    fun getEventById(eventId : Long) : EventResponseDTO {
+    fun getEventById(eventId : Long, userId : Long) : EventResponseDTO {
 
         val event = eventRepository.findByIdOrNull(eventId) ?: throw ClientException(ResponseCode.NotFound)
-        val eventResponseDTO = EventResponseDTO.from(event)
+        if (event.calendar.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
 
-        return eventResponseDTO
+        return EventResponseDTO.from(event)
     }
 
     @Transactional
-    fun createEvent(eventCreateDTO: EventCreateRequestDTO) : EventResponseDTO {
+    fun createEvent(eventCreateDTO: EventCreateRequestDTO, userId : Long) : EventResponseDTO {
 
         //TODO 일정 입력 시, 바쁜 시간대에 추가로 일정이 있는지 없는지 체크하는 기능...
+        //일정을 검색하는 방법에 대해 생각해보자...
 
         // get calendar
         val calendarEntity = calendarRepository.findByIdOrNull(eventCreateDTO.calendarId) ?: throw ClientException(ResponseCode.NotFound)
+
+        if (calendarEntity.user.userId != userId) {
+            throw ClientException(ResponseCode.NotYourResource)
+        }
 
         // get event group - eventGroupId가 있을 경우 검색 후 값 집어넣기, 아니면 null 삽입
         var eventGroupEntity : EventGroupEntity? = null
@@ -106,14 +111,20 @@ class EventService(
     }
 
     @Transactional
-    fun updateEvent(eventUpdateDTO : EventUpdateRequestDTO) : Long {
+    fun updateEvent(eventUpdateDTO : EventUpdateRequestDTO, userId: Long) : Long {
         val eventEntity = eventRepository.findByIdOrNull(eventUpdateDTO.eventId)
             ?: throw ClientException(ResponseCode.NotFound)
 
+        if (eventEntity.calendar.user.userId != userId) {
+            throw ClientException(ResponseCode.NotYourResource)
+        }
+
         // event group이 존재할 경우
         if (eventUpdateDTO.eventGroupId is Long) {
-            eventEntity.eventGroup = eventGroupRepository.findByIdOrNull(eventUpdateDTO.eventGroupId)
+            val eventGroup = eventGroupRepository.findByIdOrNull(eventUpdateDTO.eventGroupId)
                 ?: throw ClientException(ResponseCode.NotFound, "event group")
+            if (eventGroup.user.userId != userId) {throw ClientException(ResponseCode.NotYourResource)}
+            eventEntity.eventGroup = eventGroup
         } else {
             eventEntity.eventGroup = null
         }
@@ -135,7 +146,7 @@ class EventService(
         eventEntity.repeatRule = eventUpdateDTO.repeatRule
         eventEntity.colorSetId = eventUpdateDTO.colorSetId
 
-        // 수정횟수 등록
+        // 수정횟수 증가
         eventEntity.sequence += 1
 
         // History 등록
@@ -151,10 +162,11 @@ class EventService(
     }
 
     @Transactional
-    fun deleteEvent(eventId : Long) : Long {
-
+    fun deleteEvent(eventId : Long, userId: Long) : Long {
         // 실제 삭제는 배치 또는 값 검사를 통해?
         val event = eventRepository.findByIdOrNull(eventId) ?: throw ClientException(ResponseCode.NotFound)
+
+        if (event.calendar.user.userId != userId) { throw ClientException(ResponseCode.NotYourResource) }
 
         event.isDeleted = 1
 

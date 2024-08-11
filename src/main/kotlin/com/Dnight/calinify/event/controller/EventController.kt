@@ -7,6 +7,8 @@ import com.dnight.calinify.event.dto.request.EventUpdateRequestDTO
 import com.dnight.calinify.event.dto.response.EventResponseDTO
 import com.dnight.calinify.event.service.EventService
 import jakarta.validation.Valid
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -24,8 +26,11 @@ class EventController(
     }
 
     @PostMapping("/form")
-    fun createFormEvent(@Valid @RequestBody eventCreateDTO: EventCreateRequestDTO): BasicResponse<EventResponseDTO> {
-        val eventCreateResponse: EventResponseDTO = eventService.createEvent(eventCreateDTO)
+    fun createFormEvent(@Valid @RequestBody eventCreateDTO: EventCreateRequestDTO,
+                        @AuthenticationPrincipal userDetails: UserDetails,
+                        ): BasicResponse<EventResponseDTO> {
+        val userId = userDetails.username.toLong()
+        val eventCreateResponse: EventResponseDTO = eventService.createEvent(eventCreateDTO, userId)
 
         return BasicResponse.ok(eventCreateResponse, ResponseCode.CreateSuccess)
     }
