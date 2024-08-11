@@ -2,6 +2,7 @@ package com.dnight.calinify.event_group.service
 
 import com.dnight.calinify.common.colorSets.ColorSetsRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.config.basicResponse.ResponseOk
 import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.event_group.dto.request.EventGroupCreateRequestDTO
 import com.dnight.calinify.event_group.dto.request.EventGroupUpdateRequestDTO
@@ -19,18 +20,19 @@ class EventGroupService(
     private val colorSetsRepository: ColorSetsRepository,
 ) {
 
-    fun getEventGroupById(eventGroupId : Long) : EventGroupResponseDTO {
+    fun getEventGroupById(eventGroupId : Long, userId: Long) : EventGroupResponseDTO {
         val eventGroupEntity = eventGroupRepository.findByIdOrNull(eventGroupId)
             ?: throw ClientException(ResponseCode.NotFound)
+
+        if (eventGroupEntity.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
 
         return EventGroupResponseDTO.from(eventGroupEntity)
     }
 
     @Transactional
-    fun createEventGroup(eventGroupCreateRequestDTO: EventGroupCreateRequestDTO) : Long {
+    fun createEventGroup(eventGroupCreateRequestDTO: EventGroupCreateRequestDTO, userId: Long) : Long {
 
-        // TODO user logic 구현
-        val user = userRepository.findByIdOrNull(1) ?: throw ClientException(ResponseCode.UserNotFound)
+        val user = userRepository.findByIdOrNull(userId) ?: throw ClientException(ResponseCode.UserNotFound)
 
         val colorSet = colorSetsRepository.findByIdOrNull(eventGroupCreateRequestDTO.colorSetId)
             ?: throw ClientException(ResponseCode.NotFound, "color set Id")
@@ -43,10 +45,12 @@ class EventGroupService(
     }
 
     @Transactional
-    fun updateEventGroup(eventGroupUpdateRequestDTO: EventGroupUpdateRequestDTO) {
+    fun updateEventGroup(eventGroupUpdateRequestDTO: EventGroupUpdateRequestDTO, userId: Long) : ResponseOk {
 
         val eventGroupEntity = eventGroupRepository.findByIdOrNull(eventGroupUpdateRequestDTO.groupId)
             ?: throw ClientException(ResponseCode.NotFound, "group Id")
+
+        if (eventGroupEntity.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
 
         val colorSet = colorSetsRepository.findByIdOrNull(eventGroupUpdateRequestDTO.colorSetId)
             ?: throw ClientException(ResponseCode.NotFound, "color set Id")
@@ -54,13 +58,19 @@ class EventGroupService(
         eventGroupEntity.colorSet = colorSet
         eventGroupEntity.groupName = eventGroupUpdateRequestDTO.groupName
         eventGroupEntity.description = eventGroupUpdateRequestDTO.description
+
+        return ResponseOk()
     }
 
     @Transactional
-    fun deleteEventGroup(eventGroupId: Long) {
+    fun deleteEventGroup(eventGroupId: Long, userId: Long) : ResponseOk {
 
         val eventGroupEntity = eventGroupRepository.findByIdOrNull(eventGroupId) ?: throw ClientException(ResponseCode.NotFound)
 
+        if (eventGroupEntity.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
+
         eventGroupRepository.delete(eventGroupEntity)
+
+        return ResponseOk()
     }
 }
