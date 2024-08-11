@@ -16,5 +16,5 @@ data class CalendarUpdateDTO(
 
     val colorSetId : Int,
 
-    var deleted : Short
+    var isDeleted : Int
 )

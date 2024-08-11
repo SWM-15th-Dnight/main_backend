@@ -23,7 +23,7 @@ class CalendarService(
         val calendar : CalendarEntity = calendarRepository.findByCalendarIdAndUserUserId(calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFound)
 
-        if (calendar.deleted.toInt() == 1) throw ClientException(ResponseCode.DeletedResource)
+        if (calendar.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
         val calendarResponse = CalendarResponseDTO.from(calendar)
 
         return calendarResponse
@@ -49,7 +49,7 @@ class CalendarService(
         calendar.description = calendarUpdateData.description
         calendar.colorSetId = calendarUpdateData.colorSetId
         calendar.timezoneId = calendarUpdateData.timezoneId
-        calendar.deleted = calendarUpdateData.deleted
+        calendar.isDeleted = calendarUpdateData.isDeleted
 
         return ResponseOk()
     }
@@ -60,7 +60,7 @@ class CalendarService(
             ?: throw ClientException(ResponseCode.NotFound)
 
         try {
-            calendar.deleted = 1
+            calendar.isDeleted = 1
             return ResponseOk()
         } catch (e: IllegalArgumentException) {
             throw ClientException(ResponseCode.NotFound)

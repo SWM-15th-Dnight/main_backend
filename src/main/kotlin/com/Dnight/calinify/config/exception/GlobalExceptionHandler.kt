@@ -81,7 +81,7 @@ class GlobalExceptionHandler {
         ex.detail ?:
         return BasicResponse.fail(ex.responseCode)
 
-        ex.responseCode.message += "->" + ex.detail
+        ex.responseCode.message += " -> " + ex.detail
         return BasicResponse.fail(ex.responseCode)
     }
 

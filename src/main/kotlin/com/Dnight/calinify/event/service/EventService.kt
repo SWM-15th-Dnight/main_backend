@@ -37,8 +37,10 @@ class EventService(
 ) {
     fun getEventById(eventId : Long, userId : Long) : EventResponseDTO {
 
-        val event = eventRepository.findByIdOrNull(eventId) ?: throw ClientException(ResponseCode.NotFound)
-        if (event.calendar.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
+        val event = eventRepository.findByEventIdAndCalendarUserUserId(eventId, userId)
+            ?: throw ClientException(ResponseCode.NotFound, "해당 유저의 일정이 아닐 수도 있음")
+
+        if (event.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
 
         return EventResponseDTO.from(event)
     }
@@ -50,11 +52,10 @@ class EventService(
         //일정을 검색하는 방법에 대해 생각해보자...
 
         // get calendar
-        val calendarEntity = calendarRepository.findByIdOrNull(eventCreateDTO.calendarId) ?: throw ClientException(ResponseCode.NotFound)
+        val calendarEntity = calendarRepository.findByCalendarIdAndUserUserId(eventCreateDTO.calendarId, userId)
+            ?: throw ClientException(ResponseCode.NotFound, "해당 유저의 캘린더가 아닐 수도 있음")
 
-        if (calendarEntity.user.userId != userId) {
-            throw ClientException(ResponseCode.NotYourResource)
-        }
+        if (calendarEntity.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource, "calendar")
 
         // get event group - eventGroupId가 있을 경우 검색 후 값 집어넣기, 아니면 null 삽입
         var eventGroupEntity : EventGroupEntity? = null
@@ -112,26 +113,21 @@ class EventService(
 
     @Transactional
     fun updateEvent(eventUpdateDTO : EventUpdateRequestDTO, userId: Long) : Long {
-        val eventEntity = eventRepository.findByIdOrNull(eventUpdateDTO.eventId)
-            ?: throw ClientException(ResponseCode.NotFound)
-
-        if (eventEntity.calendar.user.userId != userId) {
-            throw ClientException(ResponseCode.NotYourResource)
-        }
+        // 먼저, 해당 유저의 리소스가 맞는지 확인
+        val eventEntity = eventRepository.findByEventIdAndCalendarUserUserId(eventUpdateDTO.eventId, userId)
+            ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event")
 
         // event group이 존재할 경우
         if (eventUpdateDTO.eventGroupId is Long) {
             val eventGroup = eventGroupRepository.findByIdOrNull(eventUpdateDTO.eventGroupId)
-                ?: throw ClientException(ResponseCode.NotFound, "event group")
-            if (eventGroup.user.userId != userId) {throw ClientException(ResponseCode.NotYourResource)}
-            eventEntity.eventGroup = eventGroup
+                ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event Group")
         } else {
             eventEntity.eventGroup = null
         }
 
         // event calendar 변경
-        eventEntity.calendar = calendarRepository.findByIdOrNull(eventUpdateDTO.calendarId)
-            ?: throw ClientException(ResponseCode.NotFound, "calendar")
+        eventEntity.calendar = calendarRepository.findByCalendarIdAndUserUserId(eventUpdateDTO.calendarId, userId)
+            ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")
 
         // 필수값
         eventEntity.startAt = eventUpdateDTO.startAt
@@ -155,7 +151,7 @@ class EventService(
         try {
             eventHistoryRepository.save(eventHistoryEntity)
         } catch (ex : Exception) {
-            throw ClientException(ResponseCode.DataSaveFailed, "event history save failed")
+            throw ClientException(ResponseCode.DataSaveFailed, "event history")
         }
 
         return eventEntity.eventId!!
@@ -164,9 +160,8 @@ class EventService(
     @Transactional
     fun deleteEvent(eventId : Long, userId: Long) : Long {
         // 실제 삭제는 배치 또는 값 검사를 통해?
-        val event = eventRepository.findByIdOrNull(eventId) ?: throw ClientException(ResponseCode.NotFound)
-
-        if (event.calendar.user.userId != userId) { throw ClientException(ResponseCode.NotYourResource) }
+        val event = eventRepository.findByEventIdAndCalendarUserUserId(eventId, userId)
+            ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser)
 
         event.isDeleted = 1
 

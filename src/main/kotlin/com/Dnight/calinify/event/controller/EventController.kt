@@ -19,8 +19,10 @@ class EventController(
     val eventService: EventService
 ) {
     @GetMapping("/{eventId}")
-    fun getEvent(@PathVariable eventId: Long): BasicResponse<EventResponseDTO> {
-        val eventResponse: EventResponseDTO = eventService.getEventById(eventId)
+    fun getEvent(@PathVariable eventId: Long,
+                 @AuthenticationPrincipal userDetails: UserDetails): BasicResponse<EventResponseDTO> {
+        val userId = userDetails.username.toLong()
+        val eventResponse: EventResponseDTO = eventService.getEventById(eventId, userId)
 
         return BasicResponse.ok(eventResponse, ResponseCode.ResponseSuccess)
     }
@@ -36,15 +38,19 @@ class EventController(
     }
 
     @PutMapping("/")
-    fun updateEvent(@Valid @RequestBody eventUpdateRequestDTO: EventUpdateRequestDTO): BasicResponse<Long> {
-        val eventId = eventService.updateEvent(eventUpdateRequestDTO)
+    fun updateEvent(@Valid @RequestBody eventUpdateRequestDTO: EventUpdateRequestDTO,
+                    @AuthenticationPrincipal userDetails: UserDetails): BasicResponse<Long> {
+        val userId = userDetails.username.toLong()
+        val eventId = eventService.updateEvent(eventUpdateRequestDTO, userId)
 
         return BasicResponse.ok(eventId, ResponseCode.UpdateSuccess)
     }
 
     @DeleteMapping("/{eventId}")
-    fun deleteEvent(@PathVariable eventId: Long): BasicResponse<Long> {
-        val deletedEventID = eventService.deleteEvent(eventId)
+    fun deleteEvent(@PathVariable eventId: Long,
+                    @AuthenticationPrincipal userDetails: UserDetails): BasicResponse<Long> {
+        val userId = userDetails.username.toLong()
+        val deletedEventID = eventService.deleteEvent(eventId, userId)
 
         return BasicResponse.ok(deletedEventID, ResponseCode.DeleteSuccess)
     }
