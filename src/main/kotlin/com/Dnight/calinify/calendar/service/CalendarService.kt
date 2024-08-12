@@ -6,6 +6,7 @@ import com.dnight.calinify.calendar.dto.response.CalendarResponseDTO
 import com.dnight.calinify.calendar.entity.CalendarEntity
 import com.dnight.calinify.calendar.repository.CalendarRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.config.basicResponse.ResponseOk
 import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.user.repository.UserRepository
 import jakarta.transaction.Transactional
@@ -17,60 +18,50 @@ class CalendarService(
     private val calendarRepository: CalendarRepository,
     private val userRepository: UserRepository
 ) {
-    @Transactional
-    fun getCalendarById(calendarId : Long) : CalendarResponseDTO {
+    fun getCalendarById(calendarId : Long, userId : Long) : CalendarResponseDTO {
 
-        val calendar : CalendarEntity = calendarRepository.findByIdOrNull(calendarId)
+        val calendar : CalendarEntity = calendarRepository.findByCalendarIdAndUserUserId(calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFound)
 
-        // TODO 유저의 calendar 소유권한 확인 추가
-
-        if (calendar.deleted.toInt() == 1) throw ClientException(ResponseCode.DeletedResource)
-
+        if (calendar.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
         val calendarResponse = CalendarResponseDTO.from(calendar)
 
         return calendarResponse
     }
 
     @Transactional
-    fun createCalendar(calendarData: CalendarCreateDTO): CalendarResponseDTO {
-        val user = userRepository.findByIdOrNull(calendarData.userId) ?: throw ClientException(
-            ResponseCode.UserNotFound)
+    fun createCalendar(calendarData: CalendarCreateDTO, userId : Long): Long {
+        val user = userRepository.findByIdOrNull(userId) ?: throw ClientException(ResponseCode.UserNotFound)
         val calendar = CalendarCreateDTO.toEntity(calendarData, user)
         val createdCalendar = calendarRepository.save(calendar)
 
-        return CalendarResponseDTO.from(createdCalendar)
+        return createdCalendar.calendarId
     }
 
     @Transactional
-    fun updateCalendar(calendarUpdateData: CalendarUpdateDTO): CalendarResponseDTO {
-        val user = userRepository.findByIdOrNull(calendarUpdateData.userId) ?: throw ClientException(
-            ResponseCode.UserNotFound)
+    fun updateCalendar(calendarUpdateData: CalendarUpdateDTO, userId : Long): ResponseOk {
 
-        val calendar = calendarRepository.findByIdOrNull(calendarUpdateData.calendarId) ?: throw ClientException(
+        val calendar = calendarRepository.findByCalendarIdAndUserUserId(calendarUpdateData.calendarId, userId) ?: throw ClientException(
             ResponseCode.NotFound
         )
-
-        if (calendar.user.userId != user.userId) throw ClientException(ResponseCode.NotYourResource)
 
         calendar.title = calendarUpdateData.title
         calendar.description = calendarUpdateData.description
         calendar.colorSetId = calendarUpdateData.colorSetId
         calendar.timezoneId = calendarUpdateData.timezoneId
-        calendar.deleted = calendarUpdateData.deleted
+        calendar.isDeleted = calendarUpdateData.isDeleted
 
-        return CalendarResponseDTO.from(calendar)
+        return ResponseOk()
     }
 
     @Transactional
-    fun deleteCalendarById(calendarId: Long, userId: Long): String {
-        val calendar = calendarRepository.findByIdOrNull(calendarId) ?: throw ClientException(ResponseCode.NotFound)
-
-        if (calendar.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
+    fun deleteCalendarById(calendarId: Long, userId: Long): ResponseOk {
+        val calendar = calendarRepository.findByCalendarIdAndUserUserId(calendarId, userId)
+            ?: throw ClientException(ResponseCode.NotFound)
 
         try {
-            calendar.deleted = 1
-            return calendarId.toString()
+            calendar.isDeleted = 1
+            return ResponseOk()
         } catch (e: IllegalArgumentException) {
             throw ClientException(ResponseCode.NotFound)
         }

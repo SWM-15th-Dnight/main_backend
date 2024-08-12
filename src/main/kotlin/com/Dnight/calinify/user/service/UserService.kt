@@ -11,7 +11,8 @@ class UserService(
     private val userRepository: UserRepository,
 ) {
     fun getUser(userId: Long) : UserProfileResponseDTO {
-        val user = userRepository.findById(userId).orElse(null) ?: throw ClientException(ResponseCode.UserNotFound)
+        val user = userRepository.findById(userId).orElse(null)
+            ?: throw ClientException(ResponseCode.UserNotFound)
         return UserProfileResponseDTO.from(user)
     }
 }

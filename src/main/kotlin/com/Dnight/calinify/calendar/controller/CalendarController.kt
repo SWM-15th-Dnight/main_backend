@@ -6,17 +6,12 @@ import com.dnight.calinify.calendar.dto.response.CalendarResponseDTO
 import com.dnight.calinify.calendar.service.CalendarService
 import com.dnight.calinify.config.basicResponse.BasicResponse
 import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.config.basicResponse.ResponseOk
 import jakarta.validation.Valid
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/calendars")
@@ -25,26 +20,37 @@ class CalendarController(
     private val calendarService: CalendarService
 ) {
     @GetMapping("/{calendarId}")
-    fun getCalendarById(@PathVariable calendarId: Long): BasicResponse<CalendarResponseDTO> {
-        return BasicResponse.ok(calendarService.getCalendarById(calendarId), ResponseCode.ResponseSuccess)
+    fun getCalendarById(@PathVariable calendarId: Long,
+                        @AuthenticationPrincipal userDetails: UserDetails,
+                        ): BasicResponse<CalendarResponseDTO> {
+        val userId = userDetails.username.toLong()
+        return BasicResponse.ok(calendarService.getCalendarById(calendarId, userId), ResponseCode.ResponseSuccess)
     }
 
     @PostMapping("/")
-    fun createCalendar(@Valid @RequestBody createCalendarDTO: CalendarCreateDTO): BasicResponse<CalendarResponseDTO> {
-        val calendarResponse = calendarService.createCalendar(createCalendarDTO)
+    fun createCalendar(@Valid @RequestBody createCalendarDTO: CalendarCreateDTO,
+                       @AuthenticationPrincipal userDetails: UserDetails,
+                       ): BasicResponse<Long> {
+        val userId = userDetails.username.toLong()
+        val calendarResponse = calendarService.createCalendar(createCalendarDTO, userId)
         return BasicResponse.ok(calendarResponse, ResponseCode.CreateSuccess)
     }
 
     @PutMapping("/")
-    fun updateCalendar(@Valid @RequestBody updateCalendarDTO: CalendarUpdateDTO): BasicResponse<CalendarResponseDTO> {
-        val calendarResponse = calendarService.updateCalendar(updateCalendarDTO)
+    fun updateCalendar(@Valid @RequestBody updateCalendarDTO: CalendarUpdateDTO,
+                       @AuthenticationPrincipal userDetails: UserDetails,
+                       ): BasicResponse<ResponseOk> {
+        val userId = userDetails.username.toLong()
+        val calendarResponse = calendarService.updateCalendar(updateCalendarDTO, userId)
         return BasicResponse.ok(calendarResponse, ResponseCode.UpdateSuccess)
     }
 
     @DeleteMapping("/{calendarId}")
-    fun deleteCalendar(@PathVariable calendarId: Long, @RequestParam userId: Long): BasicResponse<String> {
+    fun deleteCalendar(@PathVariable calendarId: Long,
+                       @AuthenticationPrincipal userDetails: UserDetails,
+                       ): BasicResponse<ResponseOk> {
+        val userId = userDetails.username.toLong()
         val calendarDeleted = calendarService.deleteCalendarById(calendarId, userId)
         return BasicResponse.ok(calendarDeleted, ResponseCode.DeleteSuccess)
-
     }
 }

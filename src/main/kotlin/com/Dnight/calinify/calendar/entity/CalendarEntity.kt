@@ -26,6 +26,6 @@ class CalendarEntity(
     var colorSetId : Int,
 
     @Column(nullable = false)
-    var deleted : Short = 0,
+    var isDeleted : Int = 0,
 ) : BasicEntity(){
 }

@@ -23,12 +23,11 @@ enum class ResponseCode(val statusCode: Int, var message: String) {
 
     ResponseSuccess(200, "응답 성공"),
     UpdateSuccess(200, "업데이트 성공"),
+    RequestSuccess(200, "요청 - 응답 성공"),
 
     CreateSuccess(201, "리소스 생성 성공"),
 
-
-    DeleteSuccess(204, "리소스 삭제 성공"),
-
+    DeleteSuccess(200, "리소스 삭제 성공"),
 
     // 400 - 클라이언트 에러
 
@@ -42,6 +41,7 @@ enum class ResponseCode(val statusCode: Int, var message: String) {
     Forbidden(403, "접근 권한 없음"),
 
     NotFound(404, "데이터를 찾을 수 없음"),
+    NotFoundOrNotMatchUser(404, "데이터가 없거나, 해당 유저의 것이 아님"),
     UserNotFound(404, "유저를 찾을 수 없음"),
 
     AlreadyExists(409, "이미 존재하는 데이터"),

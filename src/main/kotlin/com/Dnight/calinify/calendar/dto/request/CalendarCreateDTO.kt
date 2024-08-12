@@ -1,16 +1,11 @@
 package com.dnight.calinify.calendar.dto.request
 
 import com.dnight.calinify.calendar.entity.CalendarEntity
-import com.dnight.calinify.common.colorSets.ColorSetsEntity
 import com.dnight.calinify.user.entity.UserEntity
-import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
 class CalendarCreateDTO(
-
-    @field:Min(1)
-    val userId : Long,
 
     @field:NotBlank
     val title: String,
