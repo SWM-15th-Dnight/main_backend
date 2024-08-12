@@ -121,6 +121,7 @@ class EventService(
         if (eventUpdateDTO.eventGroupId is Long) {
             val eventGroup = eventGroupRepository.findByIdOrNull(eventUpdateDTO.eventGroupId)
                 ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event Group")
+            eventEntity.eventGroup = eventGroup
         } else {
             eventEntity.eventGroup = null
         }

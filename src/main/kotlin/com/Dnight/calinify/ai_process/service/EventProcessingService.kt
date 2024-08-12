@@ -24,7 +24,6 @@ class EventProcessingService(
     private val userRepository: UserRepository,
     private val plainTextRequest: PlainTextRequest
 ) {
-
     @Transactional(dontRollbackOn = [DontRollbackException::class])
     fun createPlainTextEvent(plainTextProcessingRequestDTO: PlainTextProcessingRequestDTO,
                              userId : Long) : ProcessedEventResponseDTO{
@@ -56,7 +55,7 @@ class EventProcessingService(
         val eventStatisticsEntity = aiProcessingStatisticsRepository.save(eventProcessedStatisticsEntity)
         val eventProcessingId : Long = eventStatisticsEntity.aiProcessingStatisticsId!!
 
-        // 성공했을 시, processing event 삽입 (실제 유저 event 반영 x)
+        // 성공했을 시, processing event 삽입 (실제 유저 일정이 아닌, 통계용 데이터)
         val processingEventEntity = AiPlainTextProcessedResponseDTO.toEventEntity(eventProcessingId, processedResponseBody)
         aiProcessingEventRepository.save(processingEventEntity)
 

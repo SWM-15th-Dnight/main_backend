@@ -27,9 +27,7 @@ enum class ResponseCode(val statusCode: Int, var message: String) {
 
     CreateSuccess(201, "리소스 생성 성공"),
 
-
     DeleteSuccess(200, "리소스 삭제 성공"),
-
 
     // 400 - 클라이언트 에러
 
