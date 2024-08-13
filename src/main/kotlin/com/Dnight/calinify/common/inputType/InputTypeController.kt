@@ -19,7 +19,7 @@ class InputTypeController(
         return BasicResponse.ok(inputType, ResponseCode.ResponseSuccess)
     }
 
-    @GetMapping()
+    @GetMapping("/")
     fun getAllInputType() : BasicResponse<List<InputTypeResponseDTO>> {
 
         val inputTypes = inputTypeService.getAllInputTypes()
