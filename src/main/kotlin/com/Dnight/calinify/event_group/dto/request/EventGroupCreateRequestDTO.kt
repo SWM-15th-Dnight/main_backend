@@ -1,7 +1,8 @@
 package com.dnight.calinify.event_group.dto.request
 
-import com.dnight.calinify.common.colorSets.ColorSetsEntity
+import com.dnight.calinify.common.colorSet.ColorSetEntity
 import com.dnight.calinify.event_group.entity.EventGroupEntity
+import com.dnight.calinify.event_group.entity.GroupCategoryEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.Size
@@ -14,17 +15,22 @@ class EventGroupCreateRequestDTO (
     val description: String? = null,
 
     @field:Min(1)
-    val colorSetId: Int? = null,
+    val colorSetId: Int,
+
+    @field:Min(1)
+    val groupCategoryId : Int,
 ) {
     companion object {
         fun toEntity(eventGroupCreateRequestDTO: EventGroupCreateRequestDTO,
                      user: UserEntity,
-                     colorSet: ColorSetsEntity) : EventGroupEntity {
+                     colorSet: ColorSetEntity,
+                     groupCategory: GroupCategoryEntity) : EventGroupEntity {
             return EventGroupEntity(
                 groupName = eventGroupCreateRequestDTO.groupName,
                 description = eventGroupCreateRequestDTO.description,
                 user = user,
                 colorSet = colorSet,
+                groupCategory = groupCategory
             )
         }
     }

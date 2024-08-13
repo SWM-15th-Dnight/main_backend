@@ -94,6 +94,7 @@ class EventCreateRequestDTO(
                            alarm : AlarmEntity?,
                            aiProcessingEventEntity: AiProcessingEventEntity?) : EventDetailEntity {
             return EventDetailEntity(
+                eventDetailId = eventMainEntity.eventId,
                 eventMain = eventMainEntity,
                 uid = EventUID.genUID(),
                 description = eventData.description,
