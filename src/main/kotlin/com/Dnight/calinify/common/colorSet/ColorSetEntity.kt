@@ -10,8 +10,8 @@ class ColorSetEntity(
     val colorSetId : Int? = null,
 
     @Column(nullable = false, length = 20)
-    val colorName : String,
+    var colorName : String,
 
     @Column(nullable = false, length = 20)
-    val hexCode : String,
+    var hexCode : String,
 )
