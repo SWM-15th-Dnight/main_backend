@@ -12,7 +12,7 @@ class EventHistoryEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    val event: EventEntity,
+    val event: EventDetailEntity,
 
     @Column(nullable = false)
     val summary: String,

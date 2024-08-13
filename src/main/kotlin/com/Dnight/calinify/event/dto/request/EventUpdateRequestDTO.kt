@@ -30,7 +30,7 @@ class EventUpdateRequestDTO(
     @field:Min(1)
     @field:Max(9)
     @Schema(description = "일정의 중요도. 1-9이며 입력이 없으면 기본값 5", defaultValue = "5")
-    val priority : Int?,
+    val priority : Int = 5,
 
     @field:Size(max = 255)
     @Schema(description = "일정의 장소")

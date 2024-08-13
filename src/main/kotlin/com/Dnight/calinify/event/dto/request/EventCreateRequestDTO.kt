@@ -1,13 +1,10 @@
 package com.dnight.calinify.event.dto.request
 
-import com.dnight.calinify.ai_process.entity.AiProcessingStatisticsEntity
+import com.dnight.calinify.ai_process.entity.AiProcessingEventEntity
 import com.dnight.calinify.alarm.dto.request.AlarmCreateRequestDTO
 import com.dnight.calinify.alarm.entity.AlarmEntity
 import com.dnight.calinify.calendar.entity.CalendarEntity
-import com.dnight.calinify.event.entity.EventEntity
-import com.dnight.calinify.event.entity.EventStatus
-import com.dnight.calinify.event.entity.EventTransp
-import com.dnight.calinify.event.entity.EventUID
+import com.dnight.calinify.event.entity.*
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.swagger.v3.oas.annotations.media.Schema
@@ -78,27 +75,34 @@ class EventCreateRequestDTO(
     val inputTimeTaken : Float
 ) {
     companion object {
-        fun toEntity(eventData : EventCreateRequestDTO,
-                     calendar : CalendarEntity,
-                     eventGroup : EventGroupEntity?,
-                     alarm : AlarmEntity?,
-                     aiProcessingStatisticsEntity: AiProcessingStatisticsEntity?) : EventEntity {
-            return EventEntity(
-                uid = EventUID.genUID(),
+        fun toMainEntity(eventData : EventCreateRequestDTO,
+                         calendar : CalendarEntity) : EventMainEntity {
+            return EventMainEntity(
                 summary = eventData.summary,
-                description = eventData.description,
                 startAt = eventData.startAt,
                 endAt = eventData.endAt,
                 priority = eventData.priority,
-                location = eventData.location,
                 repeatRule = eventData.repeatRule,
                 calendar = calendar,
+                colorSetId = eventData.colorSetId
+            )
+        }
+
+        fun toDetailEntity(eventMainEntity: EventMainEntity,
+                           eventData : EventCreateRequestDTO,
+                           eventGroup : EventGroupEntity?,
+                           alarm : AlarmEntity?,
+                           aiProcessingEventEntity: AiProcessingEventEntity?) : EventDetailEntity {
+            return EventDetailEntity(
+                eventMain = eventMainEntity,
+                uid = EventUID.genUID(),
+                description = eventData.description,
+                location = eventData.location,
                 eventGroup = eventGroup,
-                colorSetId = eventData.colorSetId,
                 status = eventData.status,
                 transp = eventData.transp,
                 alarm = alarm,
-                aiProcessingStatistics = aiProcessingStatisticsEntity
+                aiProcessingEvent = aiProcessingEventEntity
             )
         }
     }
