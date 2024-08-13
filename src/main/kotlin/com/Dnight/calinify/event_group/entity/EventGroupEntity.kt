@@ -1,6 +1,6 @@
 package com.dnight.calinify.event_group.entity
 
-import com.dnight.calinify.common.colorSets.ColorSetsEntity
+import com.dnight.calinify.common.colorSet.ColorSetEntity
 import com.dnight.calinify.config.basicEntity.BasicEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.persistence.*
@@ -18,12 +18,15 @@ class EventGroupEntity(
     @Column(nullable = true)
     var description : String? = null,
 
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     val user : UserEntity,
 
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "color_set_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    var colorSet : ColorSetsEntity
+    var colorSet : ColorSetEntity,
 
+    @JoinColumn(name = "group_category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    var groupCategory : GroupCategoryEntity,
 ) : BasicEntity()

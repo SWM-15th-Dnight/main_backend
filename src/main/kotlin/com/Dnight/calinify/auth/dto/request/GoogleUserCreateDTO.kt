@@ -1,6 +1,5 @@
 package com.dnight.calinify.auth.dto.request
 
-import com.dnight.calinify.user.entity.AccountLinkEntity
 import com.dnight.calinify.user.entity.UserEntity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -23,14 +22,12 @@ data class GoogleUserCreateDTO(
     val phoneNumber : String? = null,
 ) {
     companion object {
-        fun toEntity(data : GoogleUserCreateDTO,
-                     accountLink : AccountLinkEntity) : UserEntity {
+        fun toEntity(data : GoogleUserCreateDTO) : UserEntity {
             return UserEntity(
                 email = data.email,
                 userName = data.name,
                 gender = data.gender,
                 phoneNumber = data.phoneNumber,
-                accountLink = accountLink
             )
         }
     }

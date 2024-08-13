@@ -7,8 +7,8 @@ import jakarta.persistence.*
 data class InputTypeEntity(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val inputTypeId: Long,
+    val inputTypeId: Int? = null,
 
     @Column(nullable = false, length = 50)
-    val inputType: String
+    var inputType: String
 )

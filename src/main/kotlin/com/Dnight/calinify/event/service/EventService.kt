@@ -1,6 +1,7 @@
 package com.dnight.calinify.event.service
 
-import com.dnight.calinify.ai_process.entity.AiProcessingStatisticsEntity
+import com.dnight.calinify.ai_process.entity.AiProcessingEventEntity
+import com.dnight.calinify.ai_process.repository.AiProcessingEventRepository
 import com.dnight.calinify.ai_process.repository.AiProcessingStatisticsRepository
 import com.dnight.calinify.alarm.dto.request.AlarmCreateRequestDTO
 import com.dnight.calinify.alarm.entity.AlarmEntity
@@ -14,8 +15,9 @@ import com.dnight.calinify.event.dto.EventStatisticsDTO
 import com.dnight.calinify.event.dto.request.EventCreateRequestDTO
 import com.dnight.calinify.event.dto.request.EventUpdateRequestDTO
 import com.dnight.calinify.event.dto.response.EventResponseDTO
+import com.dnight.calinify.event.repository.EventDetailRepository
 import com.dnight.calinify.event.repository.EventHistoryRepository
-import com.dnight.calinify.event.repository.EventRepository
+import com.dnight.calinify.event.repository.EventMainRepository
 import com.dnight.calinify.event.repository.EventStatisticsRepository
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import com.dnight.calinify.event_group.repository.EventGroupRepository
@@ -25,7 +27,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class EventService(
-    private val eventRepository: EventRepository,
+    private val eventMainRepository: EventMainRepository,
+    private val eventDetailRepository: EventDetailRepository,
     private val eventGroupRepository: EventGroupRepository,
     private val alarmRepository: AlarmRepository,
     private val calendarRepository: CalendarRepository,
@@ -34,15 +37,24 @@ class EventService(
     private val eventStatisticsRepository: EventStatisticsRepository,
 
     private val alarmService: AlarmService,
+    private val aiProcessingEventRepository: AiProcessingEventRepository,
 ) {
     fun getEventById(eventId : Long, userId : Long) : EventResponseDTO {
+        /**
+         * 사용자에게 필요한 일정과 관련된 데이터를 반환한다.
+         *
+         * main + detail
+         *
+         * color set id의 순위는 1. event 2. group 3. calendar
+         */
+        val eventMain = eventMainRepository.findByEventIdAndCalendarUserUserId(eventId, userId)
+            ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event")
 
-        val event = eventRepository.findByEventIdAndCalendarUserUserId(eventId, userId)
-            ?: throw ClientException(ResponseCode.NotFound, "해당 유저의 일정이 아닐 수도 있음")
+        if (eventMain.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
 
-        if (event.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
+        val eventDetail = eventDetailRepository.findByIdOrNull(eventId)!!
 
-        return EventResponseDTO.from(event)
+        return EventResponseDTO.from(eventMain, eventDetail)
     }
 
     @Transactional
@@ -53,7 +65,7 @@ class EventService(
 
         // get calendar
         val calendarEntity = calendarRepository.findByCalendarIdAndUserUserId(eventCreateDTO.calendarId, userId)
-            ?: throw ClientException(ResponseCode.NotFound, "해당 유저의 캘린더가 아닐 수도 있음")
+            ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")
 
         if (calendarEntity.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource, "calendar")
 
@@ -61,7 +73,7 @@ class EventService(
         var eventGroupEntity : EventGroupEntity? = null
         if (eventCreateDTO.eventGroupId is Long) {
             eventGroupEntity = eventGroupRepository.findByIdOrNull(eventCreateDTO.eventGroupId)
-                ?: throw ClientException(ResponseCode.NotFound)
+                ?: throw ClientException(ResponseCode.NotFound, "eventGroup")
         }
 
         // alarm 생성 정보가 들어올 경우, 알람 생성도 진행, ID 반환받아와서 다시 검색하고 값 넣어줌.
@@ -75,37 +87,46 @@ class EventService(
             alarmRepository.findByIdOrNull(alarmId)
         }
 
-        // ai statistics가 있으면 연결, 없으면 null
-        var aiStatisticsEntity : AiProcessingStatisticsEntity? = null
+        // ai processing event 있으면 연결, 없으면 null
+        var aiProcessingEventEntity : AiProcessingEventEntity? = null
         if (eventCreateDTO.processedEventId is Long) {
-            aiStatisticsEntity = aiProcessingStatisticsRepository.findByIdOrNull(eventCreateDTO.processedEventId)
-                ?: throw ClientException(ResponseCode.NotFound, "ai processing statistics id 값이 입력되었으나, 찾을 수 없음")
+            aiProcessingEventEntity = aiProcessingEventRepository.findByIdOrNull(eventCreateDTO.processedEventId)
+                ?: throw ClientException(ResponseCode.NotFound, "ai processing event")
         }
 
-        // event entity 저장
-        var eventEntity = EventCreateRequestDTO.toEntity(eventCreateDTO, calendarEntity, eventGroupEntity, alarmEntity, aiStatisticsEntity)
+        // event main entity 저장
+        var eventMainEntity = EventCreateRequestDTO.toMainEntity(eventCreateDTO, calendarEntity)
         try {
-            eventEntity = eventRepository.save(eventEntity)
+            eventMainEntity = eventMainRepository.save(eventMainEntity)
         } catch (ex: Exception) {
-            throw ClientException(ResponseCode.DataSaveFailed, "event 저장 실패")
+            throw ClientException(ResponseCode.DataSaveFailed, "event main")
         }
 
-        val eventResponseDTO = EventResponseDTO.from(eventEntity)
+        // event detail entity 저장
+        var eventDetailEntity = EventCreateRequestDTO.toDetailEntity(
+            eventMainEntity, eventCreateDTO, eventGroupEntity, alarmEntity, aiProcessingEventEntity)
+        try {
+            eventDetailEntity = eventDetailRepository.save(eventDetailEntity)
+        } catch (ex: Exception) {
+            throw ClientException(ResponseCode.DataSaveFailed, "event detail")
+        }
+
+        val eventResponseDTO = EventResponseDTO.from(eventMainEntity, eventDetailEntity)
 
         // History 추가
-        val eventHistoryEntity = EventHistoryDTO.toEntity(eventEntity)
+        val eventHistoryEntity = EventHistoryDTO.toEntity(eventMainEntity, eventDetailEntity)
         try {
             eventHistoryRepository.save(eventHistoryEntity)
         } catch (ex: Exception) {
-            throw ClientException(ResponseCode.DataSaveFailed, "event history 저장 실패")
+            throw ClientException(ResponseCode.DataSaveFailed, "event history")
         }
 
         // event statistics 추가
-        val eventStatistics = EventStatisticsDTO.toEntity(eventCreateDTO, eventEntity.eventId!!)
+        val eventStatistics = EventStatisticsDTO.toEntity(eventCreateDTO, eventMainEntity.eventId!!)
         try {
             eventStatisticsRepository.save(eventStatistics)
         } catch (ex: Exception) {
-            throw ClientException(ResponseCode.DataSaveFailed, "event statistics 저장 실패")
+            throw ClientException(ResponseCode.DataSaveFailed, "event statistics")
         }
 
         return eventResponseDTO
@@ -114,40 +135,42 @@ class EventService(
     @Transactional
     fun updateEvent(eventUpdateDTO : EventUpdateRequestDTO, userId: Long) : Long {
         // 먼저, 해당 유저의 리소스가 맞는지 확인
-        val eventEntity = eventRepository.findByEventIdAndCalendarUserUserId(eventUpdateDTO.eventId, userId)
+        val eventMainEntity = eventMainRepository.findByEventIdAndCalendarUserUserId(eventUpdateDTO.eventId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event")
+
+        val eventDetailEntity = eventDetailRepository.findByIdOrNull(eventUpdateDTO.eventId)!!
 
         // event group이 존재할 경우
         if (eventUpdateDTO.eventGroupId is Long) {
             val eventGroup = eventGroupRepository.findByIdOrNull(eventUpdateDTO.eventGroupId)
                 ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event Group")
-            eventEntity.eventGroup = eventGroup
+            eventDetailEntity.eventGroup = eventGroup
         } else {
-            eventEntity.eventGroup = null
+            eventDetailEntity.eventGroup = null
         }
 
         // event calendar 변경
-        eventEntity.calendar = calendarRepository.findByCalendarIdAndUserUserId(eventUpdateDTO.calendarId, userId)
+        eventMainEntity.calendar = calendarRepository.findByCalendarIdAndUserUserId(eventUpdateDTO.calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")
 
         // 필수값
-        eventEntity.startAt = eventUpdateDTO.startAt
-        eventEntity.endAt = eventUpdateDTO.endAt
-        eventEntity.status = eventUpdateDTO.status
-        eventEntity.transp = eventUpdateDTO.transp
-        eventEntity.priority = eventUpdateDTO.priority
+        eventMainEntity.startAt = eventUpdateDTO.startAt
+        eventMainEntity.endAt = eventUpdateDTO.endAt
+        eventDetailEntity.status = eventUpdateDTO.status
+        eventDetailEntity.transp = eventUpdateDTO.transp
+        eventMainEntity.priority = eventUpdateDTO.priority
 
         // 선택값
-        eventEntity.description = eventUpdateDTO.description
-        eventEntity.location = eventUpdateDTO.location
-        eventEntity.repeatRule = eventUpdateDTO.repeatRule
-        eventEntity.colorSetId = eventUpdateDTO.colorSetId
+        eventDetailEntity.description = eventUpdateDTO.description
+        eventDetailEntity.location = eventUpdateDTO.location
+        eventMainEntity.repeatRule = eventUpdateDTO.repeatRule
+        eventMainEntity.colorSetId = eventUpdateDTO.colorSetId
 
         // 수정횟수 증가
-        eventEntity.sequence += 1
+        eventDetailEntity.sequence += 1
 
         // History 등록
-        val eventHistoryEntity = EventHistoryDTO.toEntity(eventEntity)
+        val eventHistoryEntity = EventHistoryDTO.toEntity(eventMainEntity, eventDetailEntity)
 
         try {
             eventHistoryRepository.save(eventHistoryEntity)
@@ -155,13 +178,13 @@ class EventService(
             throw ClientException(ResponseCode.DataSaveFailed, "event history")
         }
 
-        return eventEntity.eventId!!
+        return eventMainEntity.eventId!!
     }
 
     @Transactional
     fun deleteEvent(eventId : Long, userId: Long) : Long {
         // 실제 삭제는 배치 또는 값 검사를 통해?
-        val event = eventRepository.findByEventIdAndCalendarUserUserId(eventId, userId)
+        val event = eventMainRepository.findByEventIdAndCalendarUserUserId(eventId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser)
 
         event.isDeleted = 1
