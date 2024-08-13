@@ -5,8 +5,13 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "account_link")
 class AccountLinkEntity(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val accountLinkId: Long = 0,
+    @Id
+    var userId: Long? = null,
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    var user: UserEntity,
 
     var google : String? = null,
 

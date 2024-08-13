@@ -37,23 +37,27 @@ class AuthService(
 
     @Transactional
     fun createUser(userCreateRequestDTO: UserCreateRequestDTO) : UserCreateResponseDTO {
-        val accountLinkEntity = AccountLinkEntity()
-        val accountLink = accountLinkRepository.save(accountLinkEntity)
 
         // 비밀번호 암호화
         userCreateRequestDTO.password = passwordEncoder.encode(userCreateRequestDTO.password)
 
-        val newUser = UserCreateRequestDTO.toEntity(userCreateRequestDTO, accountLink)
-        userRepository.save(newUser)
+        val user = UserCreateRequestDTO.toEntity(userCreateRequestDTO)
+        val newUser = userRepository.save(user)
+
+        val accountLinkEntity = AccountLinkEntity(newUser.userId!!, newUser, null, null)
+
+        newUser.addAccountLink(accountLinkEntity)
+
         return UserCreateResponseDTO.from(newUser)
     }
 
     @Transactional
     fun createGoogleUser(googleUserCreateDTO: GoogleUserCreateDTO) : UserCreateResponseDTO {
-        val accountLink = AccountLinkEntity(google = googleUserCreateDTO.uid)
+        val user = GoogleUserCreateDTO.toEntity(googleUserCreateDTO)
+        val newUser = userRepository.save(user)
 
-        val newUser = GoogleUserCreateDTO.toEntity(googleUserCreateDTO, accountLink)
-        userRepository.save(newUser)
+        val accountLink = AccountLinkEntity(newUser.userId!!, newUser, google = googleUserCreateDTO.uid)
+        accountLinkRepository.save(accountLink)
 
         return UserCreateResponseDTO.from(newUser)
     }

@@ -26,11 +26,14 @@ class UserEntity (
 
     val phoneNumber: String? = null,
 
-    @OneToOne
-    @JoinColumn(name = "account_link_id", nullable = true)
-    val accountLink : AccountLinkEntity? = null,
+    @OneToOne(mappedBy = "user", cascade = [(CascadeType.ALL)])
+    var accountLink : AccountLinkEntity? = null,
 
     val isActivated : Short = 1,
 
     val role: String = "COMMON"
-) : BasicEntity()
+) : BasicEntity() {
+    fun addAccountLink(accountLink: AccountLinkEntity) {
+        this.accountLink = accountLink
+    }
+}
