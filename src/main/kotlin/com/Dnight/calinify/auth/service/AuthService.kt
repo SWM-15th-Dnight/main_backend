@@ -7,6 +7,7 @@ import com.dnight.calinify.auth.dto.response.TokenResponseDTO
 import com.dnight.calinify.auth.dto.response.UserCreateResponseDTO
 import com.dnight.calinify.auth.jwt.JwtTokenProvider
 import com.dnight.calinify.user.entity.AccountLinkEntity
+import com.dnight.calinify.user.repository.AccountLinkRepository
 import com.dnight.calinify.user.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -19,7 +20,8 @@ class AuthService(
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val accountLinkRepository: AccountLinkRepository
 ) {
 
     fun login(formLoginDTO: FormLoginDTO): TokenResponseDTO {
@@ -35,7 +37,8 @@ class AuthService(
 
     @Transactional
     fun createUser(userCreateRequestDTO: UserCreateRequestDTO) : UserCreateResponseDTO {
-        val accountLink = AccountLinkEntity()
+        val accountLinkEntity = AccountLinkEntity()
+        val accountLink = accountLinkRepository.save(accountLinkEntity)
 
         // 비밀번호 암호화
         userCreateRequestDTO.password = passwordEncoder.encode(userCreateRequestDTO.password)
