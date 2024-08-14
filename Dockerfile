@@ -1,17 +1,9 @@
-FROM gradle:7.4.2-jdk17 AS build
+FROM openjdk:17
 
-WORKDIR /app
+RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo "Asia/Seoul" > /etc/timezone
 
-COPY . .
+ARG JAR_FILE=build/libs/*.jar
 
-RUN gradle build --no-daemon
+COPY ${JAR_FILE} /root/app.jar
 
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-COPY --from=build /app/build/libs/calinify-0.0.1-SNAPSHOT.jar .
-
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
-EXPOSE 8080
+CMD ["java", "-jar", "/root/app.jar"]
