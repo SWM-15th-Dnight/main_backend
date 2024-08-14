@@ -54,10 +54,10 @@ jobs:
         
     - name: Deploy Docker image to EC2
       env:
-        PRIVATE_KEY: ${{ secrets.EC2_KEY }}
+        PRIVATE_KEY: ${{ secrets.AWS_MONO_EC2_PEM }}
       run: |
         # Save the PEM key to a file
-        echo "$PRIVATE_KEY" > ec2_key.pem
+        echo "${{ secrets.AWS_MONO_EC2_PEM }}" > ec2_key.pem
         chmod 600 ec2_key.pem
         
         # SSH into EC2 and run Docker commands
