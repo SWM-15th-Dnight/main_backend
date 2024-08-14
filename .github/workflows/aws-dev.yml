@@ -61,7 +61,7 @@ jobs:
         chmod 600 ec2_key.pem
         
         # SSH into EC2 and run Docker commands
-        scp -i ec2_key.pem -o StrictHostKeyChecking=no .env ${{ env.EC2_USER }}@$env.EC2_HOST:/home/${{ env.EC2_USER }}/.env
+        scp -i ec2_key.pem -o StrictHostKeyChecking=no .env ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
         ssh -i ec2_key.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} << 'EOF'
           # Login to ECR
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
