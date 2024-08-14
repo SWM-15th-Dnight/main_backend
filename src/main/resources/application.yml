@@ -3,9 +3,9 @@ spring:
     name: calinify
 
   datasource:
-    url: jdbc:mysql://localhost:3306/${LOCAL_DATABASE_TABLE_NAME}?serverTimezone=UTC
-    username: ${LOCAL_DATABASE_USERNAME}
-    password: ${LOCAL_DATABASE_PASSWORD}
+    url: jdbc:mysql://${CALINIFY_DATABASE_HOST}:${CALINIFY_DATABASE_PORT}/${CALINIFY_DATABASE_TABLE_NAME}?serverTimezone=UTC
+    username: ${CALINIFY_DATABASE_USERNAME}
+    password: ${CALINIFY_DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -30,4 +30,3 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
-
