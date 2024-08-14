@@ -52,17 +52,16 @@ jobs:
         echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_DATABASE_USERNAME }}" >> .env
         echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
         
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.AWS_MONO_EC2_PEM }}
+    
     - name: Deploy Docker image to EC2
-      env:
-        PRIVATE_KEY: ${{ secrets.AWS_MONO_EC2_PEM }}
-      run: |
-        # Save the PEM key to a file
-        echo "${{ secrets.AWS_MONO_EC2_PEM }}" > ec2_key.pem
-        chmod 600 ec2_key.pem
-        
+      run: |       
         # SSH into EC2 and run Docker commands
-        scp -i ec2_key.pem -o StrictHostKeyChecking=no .env ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
-        ssh -i ec2_key.pem -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} << 'EOF'
+        scp -o StrictHostKeyChecking=no .env ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
+        ssh -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} << 'EOF'
           # Login to ECR
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
