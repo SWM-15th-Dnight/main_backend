@@ -8,7 +8,7 @@ env:
   AWS_REGION: ap-northeast-2             # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: calinify           # set this to your Amazon ECR repository name
   EC2_HOST: ${{ secrets.CALINIFY_EC2_HOST }}
-  EC2_USER: ${{ secrets.CALINIFY_EC2_USERNAME }}
+  EC2_USER: ${{ secrets.CALINIFY_EC2_USER }}
 
 permissions:
   contents: read
@@ -73,5 +73,5 @@ jobs:
           docker rm core-backend-dev || true
 
           # Run the new Docker container
-          docker run -d --name core-backend-dev --env-file /home/{{ env.EC2_USER }}/.env -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          docker run -d --name core-backend-dev --env-file /home/{{ secrets.CALINIFY_EC2_USER }}/.env -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
         EOF
