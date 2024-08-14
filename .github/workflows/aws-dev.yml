@@ -63,7 +63,7 @@ jobs:
         scp -o StrictHostKeyChecking=no .env ${{ secrets.CALINIFY_EC2_USER }}@${{ secrets.CALINIFY_EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
         ssh -o StrictHostKeyChecking=no ${{ secrets.CALINIFY_EC2_USER }}@${{ secrets.CALINIFY_EC2_HOST }} << 'EOF'
           # Login to ECR
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
           # Pull the Docker image
           sudo docker pull ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
