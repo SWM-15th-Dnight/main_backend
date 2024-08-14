@@ -60,8 +60,8 @@ jobs:
     - name: Deploy Docker image to EC2
       run: |       
         # SSH into EC2 and run Docker commands
-        scp -o StrictHostKeyChecking=no .env ${{ env.EC2_USER }}@${{ env.EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
-        ssh -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${{ env.EC2_HOST }} << 'EOF'
+        scp -o StrictHostKeyChecking=no .env ${{ secrets.CALINIFY_EC2_USER }}@${{ secrets.CALINIFY_EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
+        ssh -o StrictHostKeyChecking=no ${{ secrets.CALINIFY_EC2_USER }}@${{ secrets.CALINIFY_EC2_HOST }} << 'EOF'
           # Login to ECR
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
