@@ -4,6 +4,7 @@ import com.dnight.calinify.ai_process.entity.AiProcessingEventEntity
 import com.dnight.calinify.alarm.dto.request.AlarmCreateRequestDTO
 import com.dnight.calinify.alarm.entity.AlarmEntity
 import com.dnight.calinify.calendar.entity.CalendarEntity
+import com.dnight.calinify.common.inputType.InputTypeEntity
 import com.dnight.calinify.event.entity.*
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import com.fasterxml.jackson.annotation.JsonFormat
@@ -84,7 +85,7 @@ class EventCreateRequestDTO(
                 priority = eventData.priority,
                 repeatRule = eventData.repeatRule,
                 calendar = calendar,
-                colorSetId = eventData.colorSetId
+                colorSetId = eventData.colorSetId,
             )
         }
 
@@ -92,7 +93,8 @@ class EventCreateRequestDTO(
                            eventData : EventCreateRequestDTO,
                            eventGroup : EventGroupEntity?,
                            alarm : AlarmEntity?,
-                           aiProcessingEventEntity: AiProcessingEventEntity?) : EventDetailEntity {
+                           aiProcessingEventEntity: AiProcessingEventEntity?,
+                           inputType: InputTypeEntity) : EventDetailEntity {
             return EventDetailEntity(
                 eventDetailId = eventMainEntity.eventId,
                 eventMain = eventMainEntity,
@@ -103,7 +105,9 @@ class EventCreateRequestDTO(
                 status = eventData.status,
                 transp = eventData.transp,
                 alarm = alarm,
-                aiProcessingEvent = aiProcessingEventEntity
+                aiProcessingEvent = aiProcessingEventEntity,
+                inputType = inputType,
+                inputTimeTaken = eventData.inputTimeTaken
             )
         }
     }

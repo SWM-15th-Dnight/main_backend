@@ -2,6 +2,7 @@ package com.dnight.calinify.event.entity
 
 import com.dnight.calinify.ai_process.entity.AiProcessingEventEntity
 import com.dnight.calinify.alarm.entity.AlarmEntity
+import com.dnight.calinify.common.inputType.InputTypeEntity
 import com.dnight.calinify.config.basicEntity.BasicEntity
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import jakarta.persistence.*
@@ -9,12 +10,13 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "event_detail")
 class EventDetailEntity(
+    @Id
+    val eventDetailId : Long? = 0,
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var eventDetailId : Long? = 0,
-
-    @OneToOne(mappedBy = "eventDetail", fetch = FetchType.LAZY)
-    val eventMain: EventMainEntity,
+    @MapsId
+    @OneToOne
+    @JoinColumn(name = "eventDetailId")
+    var eventMain : EventMainEntity,
 
     @Column(nullable = false, unique = true, length = 255)
     val uid : String,
@@ -47,5 +49,12 @@ class EventDetailEntity(
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ai_processing_event_id")
     var aiProcessingEvent: AiProcessingEventEntity? = null,
+
+    @JoinColumn(name = "input_type_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    var inputType : InputTypeEntity,
+
+    @Column(name = "input_time_taken")
+    var inputTimeTaken: Float,
 
     ) : BasicEntity()

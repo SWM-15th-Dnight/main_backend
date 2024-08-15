@@ -8,10 +8,10 @@ import com.dnight.calinify.alarm.entity.AlarmEntity
 import com.dnight.calinify.alarm.repository.AlarmRepository
 import com.dnight.calinify.alarm.service.AlarmService
 import com.dnight.calinify.calendar.repository.CalendarRepository
+import com.dnight.calinify.common.inputType.InputTypeRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.event.dto.EventHistoryDTO
-import com.dnight.calinify.event.dto.EventStatisticsDTO
 import com.dnight.calinify.event.dto.request.EventCreateRequestDTO
 import com.dnight.calinify.event.dto.request.EventUpdateRequestDTO
 import com.dnight.calinify.event.dto.response.EventResponseDTO
@@ -38,6 +38,7 @@ class EventService(
 
     private val alarmService: AlarmService,
     private val aiProcessingEventRepository: AiProcessingEventRepository,
+    private val inputTypeRepository: InputTypeRepository,
 ) {
     fun getEventById(eventId : Long, userId : Long) : EventResponseDTO {
         /**
@@ -66,7 +67,6 @@ class EventService(
         // get calendar
         val calendarEntity = calendarRepository.findByCalendarIdAndUserUserId(eventCreateDTO.calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")
-
         if (calendarEntity.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource, "calendar")
 
         // get event group - eventGroupId가 있을 경우 검색 후 값 집어넣기, 아니면 null 삽입
@@ -102,15 +102,15 @@ class EventService(
             throw ClientException(ResponseCode.DataSaveFailed, "event main")
         }
 
-        // event detail entity 저장
-        var eventDetailEntity = EventCreateRequestDTO.toDetailEntity(
-            eventMainEntity, eventCreateDTO, eventGroupEntity, alarmEntity, aiProcessingEventEntity)
-        try {
-            eventDetailEntity = eventDetailRepository.save(eventDetailEntity)
-        } catch (ex: Exception) {
-            throw ClientException(ResponseCode.DataSaveFailed, "event detail")
-        }
+        // input type 조회
+        val inputType = inputTypeRepository.findByIdOrNull(eventCreateDTO.inputTypeId)
+            ?: throw ClientException(ResponseCode.NotFound, "input type")
 
+        // event detail entity 저장
+        val eventDetailEntity = EventCreateRequestDTO.toDetailEntity(
+            eventMainEntity, eventCreateDTO, eventGroupEntity, alarmEntity, aiProcessingEventEntity, inputType)
+
+        // response DTO
         val eventResponseDTO = EventResponseDTO.from(eventMainEntity, eventDetailEntity)
 
         // History 추가
@@ -119,14 +119,6 @@ class EventService(
             eventHistoryRepository.save(eventHistoryEntity)
         } catch (ex: Exception) {
             throw ClientException(ResponseCode.DataSaveFailed, "event history")
-        }
-
-        // event statistics 추가
-        val eventStatistics = EventStatisticsDTO.toEntity(eventCreateDTO, eventMainEntity.eventId!!)
-        try {
-            eventStatisticsRepository.save(eventStatistics)
-        } catch (ex: Exception) {
-            throw ClientException(ResponseCode.DataSaveFailed, "event statistics")
         }
 
         return eventResponseDTO

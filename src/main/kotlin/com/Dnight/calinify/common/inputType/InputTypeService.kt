@@ -15,7 +15,7 @@ class InputTypeService(
         val inputType = inputTypeRepository.findByIdOrNull(inputTypeId)
             ?: throw ClientException(ResponseCode.NotFound, "input type id")
 
-        return InputTypeResponseDTO(inputType.inputTypeId!!, inputType.inputType)
+        return InputTypeResponseDTO(inputType.inputTypeId!!, inputType.inputType!!)
     }
 
     fun getAllInputTypes() : List<InputTypeResponseDTO> {

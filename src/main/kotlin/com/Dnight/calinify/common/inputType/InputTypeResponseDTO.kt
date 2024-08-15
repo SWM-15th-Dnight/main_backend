@@ -9,7 +9,7 @@ class InputTypeResponseDTO(
         fun from(inputTypeEntity: InputTypeEntity) : InputTypeResponseDTO {
             return InputTypeResponseDTO(
                 inputTypeId = inputTypeEntity.inputTypeId!!,
-                inputType = inputTypeEntity.inputType)
+                inputType = inputTypeEntity.inputType!!)
         }
     }
 }
