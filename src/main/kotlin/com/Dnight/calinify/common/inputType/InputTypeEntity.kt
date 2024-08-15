@@ -10,5 +10,5 @@ data class InputTypeEntity(
     val inputTypeId: Int? = null,
 
     @Column(nullable = false, length = 50)
-    var inputType: String
+    var inputType: String? = null
 )

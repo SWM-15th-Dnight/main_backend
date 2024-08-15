@@ -6,6 +6,8 @@ import com.dnight.calinify.auth.dto.request.UserCreateRequestDTO
 import com.dnight.calinify.auth.dto.response.TokenResponseDTO
 import com.dnight.calinify.auth.dto.response.UserCreateResponseDTO
 import com.dnight.calinify.auth.jwt.JwtTokenProvider
+import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.user.entity.AccountLinkEntity
 import com.dnight.calinify.user.repository.AccountLinkRepository
 import com.dnight.calinify.user.repository.UserRepository
@@ -38,10 +40,16 @@ class AuthService(
     @Transactional
     fun createUser(userCreateRequestDTO: UserCreateRequestDTO) : UserCreateResponseDTO {
 
+        // 비밀번호의 패턴 확인은 DTO 단계에서 처리
+
+        if (userRepository.existsByEmail(userCreateRequestDTO.email))
+            throw ClientException(ResponseCode.DuplicatedInputData, "email")
+
         // 비밀번호 암호화
         userCreateRequestDTO.password = passwordEncoder.encode(userCreateRequestDTO.password)
 
         val user = UserCreateRequestDTO.toEntity(userCreateRequestDTO)
+
         val newUser = userRepository.save(user)
 
         val accountLinkEntity = AccountLinkEntity(newUser.userId!!, newUser, null, null)

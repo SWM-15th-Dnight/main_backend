@@ -27,6 +27,7 @@ class CustomUserDetailService(
             ?: throw ClientException(ResponseCode.FailedLogin)
 
     private fun createUserDetail(user: UserEntity) : UserDetails {
+        if (user.isActivated.toInt() == 0) throw ClientException(ResponseCode.DeletedResource)
         return CustomUserEntity(
             user.userId!!,
             user.email,

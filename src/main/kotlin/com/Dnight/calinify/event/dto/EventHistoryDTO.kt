@@ -9,7 +9,7 @@ class EventHistoryDTO() {
         fun toEntity(eventMainEntity: EventMainEntity,
                      eventDetailEntity: EventDetailEntity): EventHistoryEntity {
             return EventHistoryEntity(
-                event = eventDetailEntity,
+                event = eventMainEntity,
 
                 summary = eventMainEntity.summary,
                 startAt = eventMainEntity.startAt,

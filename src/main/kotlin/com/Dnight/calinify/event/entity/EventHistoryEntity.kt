@@ -11,8 +11,8 @@ class EventHistoryEntity(
     val eventHistoryId: Long? = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    val event: EventDetailEntity,
+    @JoinColumn(name = "eventId", nullable = false)
+    val event: EventMainEntity,
 
     @Column(nullable = false)
     val summary: String,

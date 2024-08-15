@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 
 @RestController
@@ -20,12 +21,22 @@ class EventListController(
     private val eventListService: EventListService
 ) {
     @GetMapping("/month")
-    fun getMonthEventList(@RequestParam(defaultValue = "2024") year: Int,
+    fun getMonthEventList(@RequestParam(required = true) year: Int,
                           @RequestParam(required = true) month: Int,
                           @AuthenticationPrincipal userDetails: UserDetails
-                          ): BasicResponse<List<EventMainResponseDTO>>{
+                          ): BasicResponse<List<EventMainResponseDTO>> {
         val userId = userDetails.username.toLong()
         val eventList = eventListService.getMonthEventList(year, month, userId)
+
+        return BasicResponse.ok(eventList, ResponseCode.ResponseSuccess)
+    }
+
+    @GetMapping("/week")
+    fun getWeekEventList(@RequestParam(required = true) date : LocalDateTime,
+                         @AuthenticationPrincipal userDetails: UserDetails,
+                         ): BasicResponse<List<EventMainResponseDTO>> {
+        val userId = userDetails.username.toLong()
+        val eventList = eventListService.getWeekEventList(date, userId)
 
         return BasicResponse.ok(eventList, ResponseCode.ResponseSuccess)
     }
