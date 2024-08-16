@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CalendarRepository : JpaRepository<CalendarEntity, Long> {
     fun findByCalendarIdAndUserUserId(id: Long, user: Long) : CalendarEntity?
+
+    fun findAllByUserUserId(user : Long) : List<CalendarEntity>
 }

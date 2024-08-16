@@ -27,6 +27,15 @@ class CalendarController(
         return BasicResponse.ok(calendarService.getCalendarById(calendarId, userId), ResponseCode.ResponseSuccess)
     }
 
+    @GetMapping("/")
+    fun getAllCalendarByUser(@AuthenticationPrincipal userDetails: UserDetails): BasicResponse<List<CalendarResponseDTO>> {
+        val userId = userDetails.username.toLong()
+
+        val calendarList = calendarService.getAllCalendarByUserId(userId)
+
+        return BasicResponse.ok(calendarList, ResponseCode.ResponseSuccess)
+    }
+
     @PostMapping("/")
     fun createCalendar(@Valid @RequestBody createCalendarDTO: CalendarCreateDTO,
                        @AuthenticationPrincipal userDetails: UserDetails,
