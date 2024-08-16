@@ -12,7 +12,7 @@ class EventMainResponseDTO(
     val priority : Int,
 
     // 1순위로 event entity 자체에 값이 있을 경우, 2순위로 event group 3순위 calendar
-    val colorSetId : Int,
+    val colorSetId : Int?,
 ) {
     companion object {
         fun from(event : EventMainEntity) : EventMainResponseDTO {

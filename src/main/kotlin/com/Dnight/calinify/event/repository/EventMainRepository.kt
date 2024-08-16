@@ -9,10 +9,11 @@ import java.time.LocalDateTime
 interface EventMainRepository : JpaRepository<EventMainEntity, Long> {
     fun findByEventIdAndCalendarUserUserId(eventId: Long, userId: Long) : EventMainEntity?
 
-    @Query("SELECT e FROM EventMainEntity e JOIN e.calendar c WHERE" +
+    @Query("SELECT e " +
+            "FROM EventMainEntity e WHERE" +
             "((e.endAt >= :startMonth AND e.endAt <= :endMonth) OR" +
             "(e.startAt >= :startMonth AND e.startAt <= :endMonth))" +
-            "AND c.user.userId = :userId AND e.isDeleted = 0")
+            "AND e.calendar.user.userId = :userId AND e.isDeleted = 0")
     fun findUserEventBetween(@Param("startMonth") startMonth : LocalDateTime,
                              @Param("endMonth") endMonth : LocalDateTime,
                              @Param("userId") userId: Long): List<EventMainEntity>
