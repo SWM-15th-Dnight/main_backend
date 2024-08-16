@@ -53,7 +53,7 @@ class EventService(
 
         if (eventMain.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
 
-        val eventDetail = eventDetailRepository.findByIdOrNull(eventId)!!
+        val eventDetail = eventDetailRepository.findByIdOrNull(eventMain.eventId)!!
 
         return EventResponseDTO.from(eventMain, eventDetail)
     }
@@ -110,6 +110,8 @@ class EventService(
         val eventDetailEntity = EventCreateRequestDTO.toDetailEntity(
             eventMainEntity, eventCreateDTO, eventGroupEntity, alarmEntity, aiProcessingEventEntity, inputType)
 
+        eventDetailRepository.save(eventDetailEntity)
+
         // response DTO
         val eventResponseDTO = EventResponseDTO.from(eventMainEntity, eventDetailEntity)
 
@@ -130,7 +132,7 @@ class EventService(
         val eventMainEntity = eventMainRepository.findByEventIdAndCalendarUserUserId(eventUpdateDTO.eventId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "event")
 
-        val eventDetailEntity = eventDetailRepository.findByIdOrNull(eventUpdateDTO.eventId)!!
+        val eventDetailEntity = eventDetailRepository.findByIdOrNull(eventMainEntity.eventId)!!
 
         // event group이 존재할 경우
         if (eventUpdateDTO.eventGroupId is Long) {

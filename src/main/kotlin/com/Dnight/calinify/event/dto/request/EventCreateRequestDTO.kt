@@ -69,7 +69,7 @@ class EventCreateRequestDTO(
 
     @Schema(description = "사용자가 사용한 input 방식, 1:Form, 2:PlainText")
     @field:Min(1)
-    val inputTypeId: Int,
+    val inputTypeId: Int = 1,
 
     @field:Min(0)
     @Schema(description = "사용자가 일정을 등록하는 데에 활용한 종합 시간. 클라이언트에서 집계 후 전송")
@@ -89,15 +89,15 @@ class EventCreateRequestDTO(
             )
         }
 
-        fun toDetailEntity(eventMainEntity: EventMainEntity,
+        fun toDetailEntity(eventMain: EventMainEntity,
                            eventData : EventCreateRequestDTO,
                            eventGroup : EventGroupEntity?,
                            alarm : AlarmEntity?,
                            aiProcessingEventEntity: AiProcessingEventEntity?,
                            inputType: InputTypeEntity) : EventDetailEntity {
             return EventDetailEntity(
-                eventDetailId = eventMainEntity.eventId,
-                eventMain = eventMainEntity,
+                eventDetailId = eventMain.eventId!!,
+                eventMain = eventMain,
                 uid = EventUID.genUID(),
                 description = eventData.description,
                 location = eventData.location,

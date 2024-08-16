@@ -29,6 +29,15 @@ class CalendarService(
         return calendarResponse
     }
 
+    fun getAllCalendarByUserId(userId : Long) : List<CalendarResponseDTO> {
+
+        val calendarList = calendarRepository.findAllByUserUserId(userId)
+
+        val calendarListDTO = calendarList.map { calendar -> CalendarResponseDTO.from(calendar) }
+
+        return calendarListDTO
+    }
+
     @Transactional
     fun createCalendar(calendarData: CalendarCreateDTO, userId : Long): Long {
         val user = userRepository.findByIdOrNull(userId) ?: throw ClientException(ResponseCode.UserNotFound)
