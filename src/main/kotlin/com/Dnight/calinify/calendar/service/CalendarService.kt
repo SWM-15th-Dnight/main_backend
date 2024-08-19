@@ -8,6 +8,7 @@ import com.dnight.calinify.calendar.repository.CalendarRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.config.basicResponse.ResponseOk
 import com.dnight.calinify.config.exception.ClientException
+import com.dnight.calinify.event.repository.EventMainRepository
 import com.dnight.calinify.user.repository.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -16,7 +17,8 @@ import org.springframework.stereotype.Service
 @Service
 class CalendarService(
     private val calendarRepository: CalendarRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val eventMainRepository: EventMainRepository
 ) {
     fun getCalendarById(calendarId : Long, userId : Long) : CalendarResponseDTO {
 
@@ -33,7 +35,7 @@ class CalendarService(
 
         val calendarList = calendarRepository.findAllByUserUserId(userId)
 
-        val calendarListDTO = calendarList.map { calendar -> CalendarResponseDTO.from(calendar) }
+        val calendarListDTO = calendarList.mapNotNull { calendar -> if (calendar.isDeleted == 0) CalendarResponseDTO.from(calendar) else null}
 
         return calendarListDTO
     }
@@ -51,7 +53,7 @@ class CalendarService(
     fun updateCalendar(calendarUpdateData: CalendarUpdateDTO, userId : Long): ResponseOk {
 
         val calendar = calendarRepository.findByCalendarIdAndUserUserId(calendarUpdateData.calendarId, userId) ?: throw ClientException(
-            ResponseCode.NotFound
+            ResponseCode.NotFoundOrNotMatchUser
         )
 
         calendar.title = calendarUpdateData.title
@@ -67,6 +69,12 @@ class CalendarService(
     fun deleteCalendarById(calendarId: Long, userId: Long): ResponseOk {
         val calendar = calendarRepository.findByCalendarIdAndUserUserId(calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFound)
+
+        if (calendar.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
+
+        if (calendar.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
+
+        eventMainRepository.findAllByCalendarCalendarId(calendarId).map { event -> event.isDeleted = 1}
 
         try {
             calendar.isDeleted = 1
