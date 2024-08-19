@@ -19,4 +19,16 @@ interface EventMainRepository : JpaRepository<EventMainEntity, Long> {
     fun findUserEventBetween(@Param("startMonth") startMonth : LocalDateTime,
                              @Param("endMonth") endMonth : LocalDateTime,
                              @Param("userId") userId: Long): List<EventMainEntity>
+
+    @Query("SELECT e " +
+            "FROM EventMainEntity e " +
+            "WHERE e.calendar.user.userId = :userId " +
+            "AND e.calendar.calendarId = :calendarId " +
+            "AND e.isDeleted = 0 " +
+            "AND ((e.endAt >= :startMonth AND e.endAt <= :endMonth) OR " +
+            "(e.startAt >= :startMonth AND e.startAt <= :endMonth)) ")
+    fun findUserEventBetweenByCalendarCalendarId(@Param("startMonth") startMonth : LocalDateTime,
+                                                 @Param("endMonth") endMonth : LocalDateTime,
+                                                 @Param("userId") userId: Long,
+                                                 @Param("calendarId") calendarId: Long): List<EventMainEntity>
 }
