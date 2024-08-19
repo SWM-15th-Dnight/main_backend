@@ -26,7 +26,7 @@ class AiPlainTextProcessedResponseDTO(
                 user = userEntity,
                 inputOriginText = inputData.originText,
                 promptId = inputData.promptId,
-                inputType = inputData.inputType,
+                inputTypeId = inputData.inputType,
                 responseTime = aiPlainTextProcessedResponseDTO.responseTime,
                 usedToken = aiPlainTextProcessedResponseDTO.usedToken,
             )
