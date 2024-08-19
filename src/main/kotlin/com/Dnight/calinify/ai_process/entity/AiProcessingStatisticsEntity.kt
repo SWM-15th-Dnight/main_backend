@@ -22,7 +22,7 @@ class AiProcessingStatisticsEntity(
     val inputOriginText : String,
 
     @Column(nullable = false)
-    val inputType: Int,
+    val inputTypeId: Int,
 
     @Column(nullable = false)
     val promptId : Int,
