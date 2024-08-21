@@ -1,9 +1,9 @@
 package com.dnight.calinify.ai_process.module
 
 import io.netty.channel.ChannelOption
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.client.reactive.ClientHttpConnector
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
@@ -21,13 +21,16 @@ class WebClientConfig {
      * @author 정인모
      */
 
+    @Value("\${connect-server.ai-server.base-url}")
+    private lateinit var aiServicePath: String
+
     @Bean
     fun aiRequestBuilder(): WebClient.Builder {
         val httpClient = HttpClient.create()
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 15000)
             .responseTimeout(Duration.ofMillis(15000))
         return WebClient.builder()
-            .baseUrl("http://localhost:5050")
+            .baseUrl(aiServicePath)
             .clientConnector(ReactorClientHttpConnector(httpClient))
             .defaultHeader("Content-Type", "application/json")
     }
