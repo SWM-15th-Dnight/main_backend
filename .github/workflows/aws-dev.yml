@@ -51,7 +51,7 @@ jobs:
         echo "CALINIFY_DATABASE_TABLE_NAME=${{ secrets.CALINIFY_DATABASE_TABLE_NAME }}" >> .env
         echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_DATABASE_USERNAME }}" >> .env
         echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-        echo "AI_SERVER_URL=${{ secrets.AI_SERVER_URL }} >> .env"
+        echo "AI_SERVER_URL=${{ secrets.AI_SERVER_URL }}" >> .env
         
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.5.3
