@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "connect-server.ai-server.base-url",
+      "type": "java.lang.String",
+      "description": "Description for connect-server.ai-server.base-url."
+  }
+] }

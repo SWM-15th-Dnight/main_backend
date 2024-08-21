@@ -30,3 +30,7 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+connect-server:
+  ai-server:
+    base-url: ${AI_SERVER_URL}
