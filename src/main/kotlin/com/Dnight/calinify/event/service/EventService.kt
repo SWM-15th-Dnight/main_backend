@@ -148,6 +148,7 @@ class EventService(
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")
 
         // 필수값
+        eventMainEntity.summary = eventUpdateDTO.summary
         eventMainEntity.startAt = eventUpdateDTO.startAt
         eventMainEntity.endAt = eventUpdateDTO.endAt
         eventDetailEntity.status = eventUpdateDTO.status
