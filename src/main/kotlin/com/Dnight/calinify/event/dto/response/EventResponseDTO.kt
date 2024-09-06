@@ -22,7 +22,8 @@ class EventResponseDTO(
     val status : EventStatus,
     val transp : EventTransp,
     val eventGroup : EventGroupResponseDTO? = null,
-    val alarm : AlarmResponseDTO? = null
+    val alarm : AlarmResponseDTO? = null,
+    val isAllday : Int = 0
 ): AiResponseDTO() {
     companion object {
         fun from(eventMain : EventMainEntity,
@@ -35,6 +36,7 @@ class EventResponseDTO(
                 endAt = eventMain.endAt,
                 priority = eventMain.priority,
                 repeatRule = eventMain.repeatRule,
+                isAllday = eventMain.isAllday,
 
                 location = eventDetail.location,
                 description = eventDetail.description,

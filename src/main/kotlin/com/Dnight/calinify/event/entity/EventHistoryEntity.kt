@@ -44,5 +44,8 @@ class EventHistoryEntity(
     val location : String? = null,
 
     @Column(nullable = false)
-    val repeatRule : String? = null
+    val repeatRule : String? = null,
+
+    @Column(nullable = false)
+    val isAllday : Int = 0
 )
