@@ -72,8 +72,13 @@ class EventCreateRequestDTO(
     val inputTypeId: Int = 1,
 
     @field:Min(0)
+    @field:Max(1)
+    @Schema(description = "종일 일정 체크")
+    val isAllday: Int = 0,
+
+    @field:Min(0)
     @Schema(description = "사용자가 일정을 등록하는 데에 활용한 종합 시간. 클라이언트에서 집계 후 전송")
-    val inputTimeTaken : Float
+    val inputTimeTaken : Float,
 ) {
     companion object {
         fun toMainEntity(eventData : EventCreateRequestDTO,
@@ -86,6 +91,7 @@ class EventCreateRequestDTO(
                 repeatRule = eventData.repeatRule,
                 calendar = calendar,
                 colorSetId = eventData.colorSetId,
+                isAllday = eventData.isAllday,
             )
         }
 

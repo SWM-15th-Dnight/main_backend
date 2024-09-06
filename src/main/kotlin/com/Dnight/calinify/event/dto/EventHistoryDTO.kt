@@ -4,7 +4,7 @@ import com.dnight.calinify.event.entity.EventDetailEntity
 import com.dnight.calinify.event.entity.EventHistoryEntity
 import com.dnight.calinify.event.entity.EventMainEntity
 
-class EventHistoryDTO() {
+class EventHistoryDTO {
     companion object {
         fun toEntity(eventMainEntity: EventMainEntity,
                      eventDetailEntity: EventDetailEntity): EventHistoryEntity {
@@ -16,6 +16,7 @@ class EventHistoryDTO() {
                 endAt = eventMainEntity.endAt,
                 priority = eventMainEntity.priority,
                 repeatRule = eventMainEntity.repeatRule,
+                isAllday = eventMainEntity.isAllday,
 
                 description = eventDetailEntity.description,
                 status = eventDetailEntity.status,

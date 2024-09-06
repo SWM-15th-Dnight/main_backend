@@ -10,6 +10,7 @@ class EventMainResponseDTO(
     val endAt : LocalDateTime,
     val repeatRule : String?,
     val priority : Int,
+    val isAllday : Int,
 
     // 1순위로 event entity 자체에 값이 있을 경우, 2순위로 event group 3순위 calendar
     val colorSetId : Int?,
@@ -23,7 +24,8 @@ class EventMainResponseDTO(
                 endAt = event.endAt,
                 repeatRule = event.repeatRule,
                 priority = event.priority,
-                colorSetId = event.colorSetId!!
+                colorSetId = event.colorSetId!!,
+                isAllday = event.isAllday,
             )
         }
     }

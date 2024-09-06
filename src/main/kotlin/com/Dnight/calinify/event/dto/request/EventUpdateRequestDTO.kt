@@ -55,4 +55,9 @@ class EventUpdateRequestDTO(
 
     @Schema(description = "일정 그룹의 ID, 생략 가능")
     val eventGroupId : Long?,
+
+    @field:Min(0)
+    @field:Max(1)
+    @Schema(description = "종일 일정 체크")
+    val isAllday: Int = 0,
     )

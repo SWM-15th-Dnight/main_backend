@@ -2,7 +2,6 @@ package com.dnight.calinify.event.service
 
 import com.dnight.calinify.ai_process.entity.AiProcessingEventEntity
 import com.dnight.calinify.ai_process.repository.AiProcessingEventRepository
-import com.dnight.calinify.ai_process.repository.AiProcessingStatisticsRepository
 import com.dnight.calinify.alarm.dto.request.AlarmCreateRequestDTO
 import com.dnight.calinify.alarm.entity.AlarmEntity
 import com.dnight.calinify.alarm.repository.AlarmRepository
@@ -18,7 +17,6 @@ import com.dnight.calinify.event.dto.response.EventResponseDTO
 import com.dnight.calinify.event.repository.EventDetailRepository
 import com.dnight.calinify.event.repository.EventHistoryRepository
 import com.dnight.calinify.event.repository.EventMainRepository
-import com.dnight.calinify.event.repository.EventStatisticsRepository
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import com.dnight.calinify.event_group.repository.EventGroupRepository
 import jakarta.transaction.Transactional
@@ -33,8 +31,6 @@ class EventService(
     private val alarmRepository: AlarmRepository,
     private val calendarRepository: CalendarRepository,
     private val eventHistoryRepository: EventHistoryRepository,
-    private val aiProcessingStatisticsRepository: AiProcessingStatisticsRepository,
-    private val eventStatisticsRepository: EventStatisticsRepository,
 
     private val alarmService: AlarmService,
     private val aiProcessingEventRepository: AiProcessingEventRepository,
