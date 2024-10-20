@@ -26,8 +26,9 @@ class EventListService(
         // calendar의 삭제 여부 판별 후, event 개별 삭제 여부 판별
         for (calendar in calendarList) {
             if (calendar.isDeleted == 1) continue
+            val calendarId : Long = calendar.calendarId
             eventMainRepository.findAllByCalendarCalendarId(calendar.calendarId)
-                .forEach { if(it.isDeleted == 0) eventList.add(EventMainResponseDTO.from(it)) }
+                .forEach { if(it.isDeleted == 0) eventList.add(EventMainResponseDTO.from(it, calendarId)) }
         }
 
         return eventList
@@ -42,7 +43,7 @@ class EventListService(
         if (calendar.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource)
 
         val eventList = eventMainRepository.findAllByCalendarCalendarId(calendarId).mapNotNull {
-            if (it.isDeleted == 0) EventMainResponseDTO.from(it) else null}
+            if (it.isDeleted == 0) EventMainResponseDTO.from(it, calendarId) else null}
 
         return eventList
     }
@@ -54,7 +55,7 @@ class EventListService(
 
         val eventList : List<EventMainEntity> = eventMainRepository.findUserEventBetween(startMonth, endMonth, userId)
         // 위에서 userId, delete 판별
-        val eventListDTO = eventList.map { EventMainResponseDTO.from(it) }
+        val eventListDTO = eventList.map { EventMainResponseDTO.from(it, it.calendar.calendarId) }
 
         return eventListDTO
     }
@@ -65,7 +66,7 @@ class EventListService(
 
         val eventList : List<EventMainEntity> = eventMainRepository.findUserEventBetween(weekPair.first, weekPair.second, userId)
         // 위에서 userId, delete 판별
-        val eventListDTO = eventList.map { EventMainResponseDTO.from(it) }
+        val eventListDTO = eventList.map { EventMainResponseDTO.from(it, it.calendar.calendarId) }
 
         return eventListDTO
     }
@@ -78,7 +79,7 @@ class EventListService(
         val eventList : List<EventMainEntity> =
             eventMainRepository.findUserEventBetweenByCalendarCalendarId(startMonth, endMonth, userId, calendarId)
         // 위에서 userId, delete 판별
-        val eventListDTO = eventList.map { EventMainResponseDTO.from(it) }
+        val eventListDTO = eventList.map { EventMainResponseDTO.from(it, it.calendar.calendarId) }
 
         return eventListDTO
     }
@@ -90,7 +91,7 @@ class EventListService(
         val eventList : List<EventMainEntity> =
             eventMainRepository.findUserEventBetweenByCalendarCalendarId(weekPair.first, weekPair.second, userId, calendarId)
         // 위에서 userId, delete 판별
-        val eventListDTO = eventList.map { EventMainResponseDTO.from(it) }
+        val eventListDTO = eventList.map { EventMainResponseDTO.from(it, it.calendar.calendarId) }
 
         return eventListDTO
     }
