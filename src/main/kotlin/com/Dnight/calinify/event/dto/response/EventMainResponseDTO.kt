@@ -11,12 +11,13 @@ class EventMainResponseDTO(
     val repeatRule : String?,
     val priority : Int,
     val isAllday : Int,
+    val calendarId : Long,
 
     // 1순위로 event entity 자체에 값이 있을 경우, 2순위로 event group 3순위 calendar
     val colorSetId : Int?,
 ) {
     companion object {
-        fun from(event : EventMainEntity) : EventMainResponseDTO {
+        fun from(event : EventMainEntity, calendarId : Long) : EventMainResponseDTO {
             return EventMainResponseDTO(
                 eventId = event.eventId!!,
                 summary = event.summary,
@@ -25,6 +26,7 @@ class EventMainResponseDTO(
                 repeatRule = event.repeatRule,
                 priority = event.priority,
                 colorSetId = event.colorSetId!!,
+                calendarId = calendarId,
                 isAllday = event.isAllday,
             )
         }
