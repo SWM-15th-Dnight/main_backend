@@ -36,14 +36,11 @@ class EventGroupService(
 
         val user = userRepository.findByIdOrNull(userId) ?: throw ClientException(ResponseCode.UserNotFound)
 
-        val colorSet = colorSetRepository.findByIdOrNull(eventGroupCreateRequestDTO.colorSetId)
-            ?: throw ClientException(ResponseCode.NotFound, "color set Id")
-
         val groupCategoryEntity = groupCategoryRepository.findByIdOrNull(eventGroupCreateRequestDTO.groupCategoryId)
             ?: throw ClientException(ResponseCode.NotFound, "group category Id")
 
         val eventGroupEntity = EventGroupCreateRequestDTO.toEntity(
-            eventGroupCreateRequestDTO, user, colorSet, groupCategoryEntity)
+            eventGroupCreateRequestDTO, user, eventGroupCreateRequestDTO.colorSetId, groupCategoryEntity)
 
         val eventGroup = eventGroupRepository.save(eventGroupEntity)
 
@@ -58,10 +55,7 @@ class EventGroupService(
 
         if (eventGroupEntity.user.userId != userId) throw ClientException(ResponseCode.NotYourResource)
 
-        val colorSet = colorSetRepository.findByIdOrNull(eventGroupUpdateRequestDTO.colorSetId)
-            ?: throw ClientException(ResponseCode.NotFound, "color set Id")
-
-        eventGroupEntity.colorSet = colorSet
+        eventGroupEntity.colorSetId = eventGroupUpdateRequestDTO.colorSetId
         eventGroupEntity.groupName = eventGroupUpdateRequestDTO.groupName
         eventGroupEntity.description = eventGroupUpdateRequestDTO.description
 
