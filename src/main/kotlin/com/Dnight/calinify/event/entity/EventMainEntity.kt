@@ -44,7 +44,7 @@ class EventMainEntity(
     var isDeleted : Int = 0,
 
     @Column(nullable = true)
-    var colorSetId : Int? = null,
+    var colorSetId : Int? = 1,
 
     @Column(nullable = true)
     var isAllday : Int = 0

@@ -56,7 +56,7 @@ class EventCreateRequestDTO(
     val calendarId: Long,
 
     @Schema(description = "일정의 컬러셋, 생략 가능", defaultValue = "1")
-    val colorSetId : Int? = null,
+    var colorSetId : Int? = 1,
 
     @Schema(description = "일정 그룹의 ID, 생략 가능")
     val eventGroupId : Long? = null,

@@ -64,12 +64,14 @@ class EventService(
         val calendarEntity = calendarRepository.findByCalendarIdAndUserUserId(eventCreateDTO.calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")
         if (calendarEntity.isDeleted == 1) throw ClientException(ResponseCode.DeletedResource, "calendar")
+        var eventColorSetId = calendarEntity.colorSetId
 
         // get event group - eventGroupId가 있을 경우 검색 후 값 집어넣기, 아니면 null 삽입
         var eventGroupEntity : EventGroupEntity? = null
         if (eventCreateDTO.eventGroupId is Long) {
             eventGroupEntity = eventGroupRepository.findByIdOrNull(eventCreateDTO.eventGroupId)
                 ?: throw ClientException(ResponseCode.NotFound, "eventGroup")
+            eventColorSetId = eventGroupEntity.colorSetId
         }
 
         // alarm 생성 정보가 들어올 경우, 알람 생성도 진행, ID 반환받아와서 다시 검색하고 값 넣어줌.
@@ -89,6 +91,9 @@ class EventService(
             aiProcessingEventEntity = aiProcessingEventRepository.findByIdOrNull(eventCreateDTO.processedEventId)
                 ?: throw ClientException(ResponseCode.NotFound, "ai processing event")
         }
+
+        // 색상 지정
+        eventCreateDTO.colorSetId = eventColorSetId
 
         // event main entity 저장
         var eventMainEntity = EventCreateRequestDTO.toMainEntity(eventCreateDTO, calendarEntity)
@@ -150,6 +155,7 @@ class EventService(
         eventDetailEntity.status = eventUpdateDTO.status
         eventDetailEntity.transp = eventUpdateDTO.transp
         eventMainEntity.priority = eventUpdateDTO.priority
+        eventMainEntity.isAllday = eventUpdateDTO.isAllday
 
         // 선택값
         eventDetailEntity.description = eventUpdateDTO.description
