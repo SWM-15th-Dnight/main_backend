@@ -1,9 +1,6 @@
 package com.dnight.calinify.config.exception
 
-import com.dnight.calinify.config.basicResponse.BasicResponse
-import com.dnight.calinify.config.basicResponse.ExceptionResponse
-import com.dnight.calinify.config.basicResponse.FailedValidationResponse
-import com.dnight.calinify.config.basicResponse.ResponseCode
+import com.dnight.calinify.config.basicResponse.*
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.core.AuthenticationException
@@ -77,12 +74,9 @@ class GlobalExceptionHandler {
      * @author 정인모
      */
     @ExceptionHandler(ClientException::class)
-    fun handleClientException(ex: ClientException): BasicResponse<ExceptionResponse> {
-        ex.detail ?:
-        return BasicResponse.fail(ex.responseCode)
-
-        ex.responseCode.message += " -> " + ex.detail
-        return BasicResponse.fail(ex.responseCode)
+    fun handleClientException(ex: ClientException): BasicResponse<DetailExceptionResponse> {
+        val detailMessage = DetailExceptionResponse(ex.responseCode.message + " -> " + (ex.detail ?: "Unknown"))
+        return BasicResponse.fail(ex.responseCode, detailMessage)
     }
 
     /**
