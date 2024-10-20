@@ -9,6 +9,17 @@ class ExceptionResponse(
     val message: String,
 )
 
+/**
+ * ResponseCode의 메세지에 추가적인 detail message가 필요할 때 사용
+ */
+class DetailExceptionResponse(
+    val detailMessage : String
+)
+
+/**
+ * http reqeust에서 DTO validation error 발생 시 활용
+ */
+
 class FailedValidationResponse<T>(
     val message: String,
     val detail: T,
