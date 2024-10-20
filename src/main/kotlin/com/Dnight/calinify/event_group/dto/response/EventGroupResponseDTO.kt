@@ -14,7 +14,7 @@ class EventGroupResponseDTO(
             return EventGroupResponseDTO(
                 groupName = groupEntity.groupName,
                 description = groupEntity.description,
-                colorSetId = groupEntity.colorSet.colorSetId,
+                colorSetId = groupEntity.colorSetId,
             )
         }
     }

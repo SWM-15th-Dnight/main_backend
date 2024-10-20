@@ -14,5 +14,5 @@ class EventGroupUpdateRequestDTO (
     val description: String? = null,
 
     @field:Min(1)
-    val colorSetId: Int? = null,
+    val colorSetId: Int,
 )

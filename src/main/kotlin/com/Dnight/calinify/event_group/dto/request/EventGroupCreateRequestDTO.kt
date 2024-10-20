@@ -1,6 +1,5 @@
 package com.dnight.calinify.event_group.dto.request
 
-import com.dnight.calinify.common.colorSet.ColorSetEntity
 import com.dnight.calinify.event_group.entity.EventGroupEntity
 import com.dnight.calinify.event_group.entity.GroupCategoryEntity
 import com.dnight.calinify.user.entity.UserEntity
@@ -23,13 +22,13 @@ class EventGroupCreateRequestDTO (
     companion object {
         fun toEntity(eventGroupCreateRequestDTO: EventGroupCreateRequestDTO,
                      user: UserEntity,
-                     colorSet: ColorSetEntity,
+                     colorSetId: Int,
                      groupCategory: GroupCategoryEntity) : EventGroupEntity {
             return EventGroupEntity(
                 groupName = eventGroupCreateRequestDTO.groupName,
                 description = eventGroupCreateRequestDTO.description,
                 user = user,
-                colorSet = colorSet,
+                colorSetId = colorSetId,
                 groupCategory = groupCategory
             )
         }
