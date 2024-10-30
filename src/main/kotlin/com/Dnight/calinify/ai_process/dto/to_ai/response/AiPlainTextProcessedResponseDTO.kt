@@ -7,17 +7,17 @@ import com.dnight.calinify.user.entity.UserEntity
 import java.time.LocalDateTime
 
 class AiPlainTextProcessedResponseDTO(
-    val summary : String,
-    val start : LocalDateTime?,
-    val end : LocalDateTime?,
-    val responseTime : Float,
-    val usedToken : Int,
-    val location : String?,
-    val description : String?,
-    val priority : Short? = 5,
-    val repeatRule : String?,
-) : AiResponseDTO() {
-
+    summary: String,
+    start: LocalDateTime?,
+    end: LocalDateTime?,
+    responseTime: Float,
+    usedToken: Int,
+    location: String?,
+    description: String?,
+    priority: Short? = 5,
+    repeatRule: String?
+) : AiResponseDTO(summary, start, end, responseTime, usedToken, location, description, priority, repeatRule)
+{
     companion object {
         fun toStatisticsEntity(userEntity : UserEntity,
                      aiPlainTextProcessedResponseDTO: AiPlainTextProcessedResponseDTO,

@@ -1,6 +1,5 @@
 package com.dnight.calinify.event.dto.response
 
-import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO
 import com.dnight.calinify.alarm.dto.response.AlarmResponseDTO
 import com.dnight.calinify.event.entity.EventDetailEntity
 import com.dnight.calinify.event.entity.EventMainEntity
@@ -24,7 +23,7 @@ class EventResponseDTO(
     val eventGroup : EventGroupResponseDTO? = null,
     val alarm : AlarmResponseDTO? = null,
     val isAllday : Int = 0
-): AiResponseDTO() {
+){
     companion object {
         fun from(eventMain : EventMainEntity,
                  eventDetail: EventDetailEntity,) : EventResponseDTO {
