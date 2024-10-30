@@ -1,6 +1,6 @@
 package com.dnight.calinify.ai_process.dto.response
 
-import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
+import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO
 import java.time.LocalDateTime
 
 class ProcessedEventResponseDTO(
@@ -16,7 +16,7 @@ class ProcessedEventResponseDTO(
     val repeatRule : String?,
 ) {
     companion object {
-        fun from(processedEventId: Long, processedResponseBody : AiPlainTextProcessedResponseDTO) : ProcessedEventResponseDTO {
+        fun from(processedEventId: Long, processedResponseBody : AiResponseDTO) : ProcessedEventResponseDTO {
             return ProcessedEventResponseDTO(
                 processedEventId = processedEventId,
                 summary = processedResponseBody.summary,

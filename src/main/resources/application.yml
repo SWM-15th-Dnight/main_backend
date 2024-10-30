@@ -33,4 +33,4 @@ springdoc:
 
 connect-server:
   ai-server:
-    base-url: ${AI_SERVER_URL}
+    base-url: "http://localhost:5050/"

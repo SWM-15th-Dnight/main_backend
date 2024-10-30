@@ -7,10 +7,10 @@ class AiPlainTextProcessingRequestDTO(
     val plainText : String
 ) : AiRequestDTO() {
     companion object {
-        fun toEntity(plainTextProcessingRequestDTO: PlainTextProcessingRequestDTO) : AiPlainTextProcessingRequestDTO {
+        fun toDTO(plainTextProcessingRequestDTO: PlainTextProcessingRequestDTO) : AiPlainTextProcessingRequestDTO {
             return AiPlainTextProcessingRequestDTO(
-                plainTextProcessingRequestDTO.promptId,
-                plainTextProcessingRequestDTO.originText
+                promptId = plainTextProcessingRequestDTO.promptId,
+                plainText = plainTextProcessingRequestDTO.originText
             )
         }
     }
