@@ -21,6 +21,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @Service
 class EventProcessingService(
@@ -76,7 +77,9 @@ class EventProcessingService(
     fun createImageEvent(imageProcessingRequestDTO: ImageProcessingRequestDTO, file: MultipartFile, userId : Long) : ProcessedEventResponseDTO{
         val aiImageProcessingRequestDTO = AiImageProcessingRequestDTO.toDTO(imageProcessingRequestDTO)
 
-        val imageProcessedResponseDTO = imageRequest.aiRequest(aiImageProcessingRequestDTO, file, AiImageProcessedResponseDTO::class)
+        val imageUUID = UUID.randomUUID().toString()
+
+        val imageProcessedResponseDTO = imageRequest.aiRequest(aiImageProcessingRequestDTO, imageUUID, file, AiImageProcessedResponseDTO::class)
             ?: throw ServerSideException(ResponseCode.AiRequestFail)
 
         // 응답으로부터 body 추출
@@ -86,7 +89,7 @@ class EventProcessingService(
         val userEntity = userRepository.findByIdOrNull(userId) ?: throw ClientException(ResponseCode.UserNotFound)
 
         // 통계 객체 생성
-        val eventProcessedStatisticsEntity = AiImageProcessedResponseDTO.toStatisticsEntity(userEntity, processedResponseBody, imageProcessingRequestDTO)
+        val eventProcessedStatisticsEntity = AiImageProcessedResponseDTO.toStatisticsEntity(userEntity, processedResponseBody, imageUUID, imageProcessingRequestDTO)
 
         // 일정 정보 파악 실패 시 예외 발생, 실패 경우 저장을 위해 트랜잭션 롤백 X
         if (imageProcessedResponseDTO.statusCode.isSameCodeAs(HttpStatus.ACCEPTED)) {
