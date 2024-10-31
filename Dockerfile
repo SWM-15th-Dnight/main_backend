@@ -18,4 +18,4 @@ RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo "Asia/Seoul" >
 COPY --from=build /app/build/libs/*.jar /root/app.jar
 
 # 애플리케이션 실행
-CMD ["java", "-jar", "/root/app.jar"]
+CMD ["java", "-Duser.timezone=Asia/Seoul", "-jar", "/root/app.jar"]
