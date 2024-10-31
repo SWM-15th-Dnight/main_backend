@@ -14,19 +14,9 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
-        timezone: Asia/Seoul
-
-  profiles:
-    active: dev
 
 jwt:
   secret: ${JWT_SECRET_KEY}
-
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: https://securetoken.google.com/swm-mobile-client
 
 springdoc:
 
@@ -37,4 +27,4 @@ springdoc:
 
 connect-server:
   ai-server:
-    base-url: "http://localhost:5050/"
+    base-url: ${AI_SERVER_URL}
