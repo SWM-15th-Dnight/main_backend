@@ -22,10 +22,14 @@ class ImageRequest(
 ) {
     val aiRequestClient = aiRequestBuilder.build()
 
-    fun <T : AiResponseDTO> aiRequest(requestDTO : AiImageProcessingRequestDTO, file : MultipartFile,responseCls : KClass<T>) : ResponseEntity<T>? {
+    fun <T : AiResponseDTO> aiRequest(requestDTO : AiImageProcessingRequestDTO,
+                                      imageUUID: String,
+                                      file : MultipartFile,
+                                      responseCls : KClass<T>) : ResponseEntity<T>? {
 
         val body = LinkedMultiValueMap<String, Any>().apply {
             add("promptId", requestDTO.promptId.toString())
+            add("imageUUID", imageUUID)
             add("image", object : ByteArrayResource(file.bytes) {
                 override fun getFilename() = file.originalFilename
             })

@@ -21,11 +21,12 @@ class AiImageProcessedResponseDTO(
     companion object {
         fun toStatisticsEntity(userEntity : UserEntity,
                                aiImageProcessedResponseDTO: AiImageProcessedResponseDTO,
+                               imageUUID : String,
                                inputData: ImageProcessingRequestDTO
         ): AiProcessingStatisticsEntity {
             return AiProcessingStatisticsEntity(
                 user = userEntity,
-                inputOriginText = "image",
+                inputOriginText = imageUUID,
                 promptId = inputData.promptId,
                 inputTypeId = inputData.inputType,
                 responseTime = aiImageProcessedResponseDTO.responseTime,
