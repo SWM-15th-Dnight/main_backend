@@ -61,19 +61,17 @@ jobs:
         ssh -o StrictHostKeyChecking=no ${{ env.BASTION_USER }}@${{ env.BASTION_HOST }} << 'EOF'
         
           # Private EC2에 접근할 PEM 키 파일 생성
-          echo "${{ secrets.PRIVATE_MAIN_PEM }}" > private_main_key.pem
+          echo "${{ env.PRIVATE_MAIN_PEM }}" > private_main_key.pem
           chmod 600 private_main_key.pem
         
           # 내부에서 사용할 env 파일 생성
-          cat << EOT > .env
-        CALINIFY_DATABASE_HOST=${{ secrets.CALINIFY_PROD_RDS_HOST }}
-        CALINIFY_DATABASE_PASSWORD=${{ secrets.CALINIFY_PROD_RDS_PASSWORD }}
-        CALINIFY_DATABASE_PORT=${{ secrets.CALINIFY_PROD_RDS_PORT }}
-        CALINIFY_DATABASE_TABLE_NAME=${{ secrets.CALINIFY_PROD_RDS_TABLE_NAME }}
-        CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_PROD_RDS_USERNAME }}
-        JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-        AI_SERVER_URL=${{ secrets.PROD_AI_SERVER_URL }}
-        EOT
+          echo "CALINIFY_DATABASE_HOST=${{ secrets.CALINIFY_PROD_RDS_HOST }}" > .env
+          echo "CALINIFY_DATABASE_PASSWORD=${{ secrets.CALINIFY_PROD_RDS_PASSWORD }}" > .env
+          echo "CALINIFY_DATABASE_PORT=${{ secrets.CALINIFY_PROD_RDS_PORT }}" > .env
+          echo "CALINIFY_DATABASE_TABLE_NAME=${{ secrets.CALINIFY_PROD_RDS_TABLE_NAME }}" > .env
+          echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_PROD_RDS_USERNAME }}" > .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" > .env
+          echo "AI_SERVER_URL=${{ secrets.PROD_AI_SERVER_URL }}" > .env
         
           # Private EC2에 env 파일과 키 파일 전송
           scp -i private_main_key.pem -o StrictHostKeyChecking=no .env private_main_key.pem ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }}:/home/${{ env.PRIVATE_MAIN_USER }}/
