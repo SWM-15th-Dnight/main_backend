@@ -58,7 +58,7 @@ jobs:
     - name: Deploy Docker image to EC2
       run: |
         # SSH into Bastion and setup for Private EC2 access
-        ssh -o StrictHostKeyChecking=no ${{ env.BASTION_USER }}@${{ env.BASTION_HOST }} << EOF
+        ssh -o StrictHostKeyChecking=no ${{ env.BASTION_USER }}@${{ env.BASTION_HOST }} << 'EOF'
         
           # Private EC2에 접근할 PEM 키 파일 생성
           echo "${{ env.PRIVATE_MAIN_PEM }}" > private_main_key.pem
@@ -81,7 +81,7 @@ jobs:
         
           # Private EC2에서 Docker 명령어 실행
           echo "Private ec2 server 진입"
-          ssh -i private_main_key.pem -o StrictHostKeyChecking=no ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }} << INNER_EOF
+          ssh -i private_main_key.pem -o StrictHostKeyChecking=no ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }} << 'INNER_EOF'
         
             # Login to ECR
             echo "Private ec2 server 진입 성공 및 ECR login"
