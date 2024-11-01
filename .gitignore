@@ -38,3 +38,9 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### properties ###
+application.properties
+
+### firebase auth ###
+/src/main/resources/firebase.json

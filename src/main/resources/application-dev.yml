@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: calinify
+
+  datasource:
+    url: jdbc:mysql://${CALINIFY_DATABASE_HOST}:${CALINIFY_DATABASE_PORT}/${CALINIFY_DATABASE_TABLE_NAME}?serverTimezone=Asia/Seoul
+    username: ${CALINIFY_DATABASE_USERNAME}
+    password: ${CALINIFY_DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+        timezone: Asia/Seoul
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+
+springdoc:
+
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+connect-server:
+  ai-server:
+    base-url: "http://localhost:5050/"
