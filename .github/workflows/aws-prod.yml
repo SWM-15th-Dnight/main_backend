@@ -65,6 +65,7 @@ jobs:
           chmod 600 private_main_key.pem
         
           # 내부에서 사용할 env 파일 생성
+          touch .env
           echo "CALINIFY_DATABASE_HOST=${{ secrets.CALINIFY_PROD_RDS_HOST }}" > .env
           echo "CALINIFY_DATABASE_PASSWORD=${{ secrets.CALINIFY_PROD_RDS_PASSWORD }}" > .env
           echo "CALINIFY_DATABASE_PORT=${{ secrets.CALINIFY_PROD_RDS_PORT }}" > .env
@@ -79,24 +80,34 @@ jobs:
           rm -f .env
         
           # Private EC2에서 Docker 명령어 실행
+          echo "Private ec2 server 진입"
           ssh -i private_main_key.pem -o StrictHostKeyChecking=no ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }} << INNER_EOF
         
             # Login to ECR
+            echo "Private ec2 server 진입 성공 및 ECR login"
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+            echo "ECR login success"
         
             # Pull the Docker image
+            echo "Docker image pull -> ${{ steps.login-ecr.outputs.registry }}"
             sudo docker pull ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            echo "Docker image pull success"
         
             # 중복된 Docker 컨테이너 삭제
+            echo "중복된 컨테이너 삭제"
             if sudo docker ps -a --format '{{.Names}}' | grep -q '^core-backend-dev$'; then
               sudo docker stop core-backend-dev
               sudo docker rm core-backend-dev
             fi
+            echo "중복 컨테이너 삭제 완료"
         
             # Run the new Docker container
+            echo "Docker run..."
             sudo docker run -d --name core-backend-dev --env-file /home/${{ env.PRIVATE_MAIN_USER }}/.env -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            echo "Docker run success"
             
             rm -f /home/${{ env.PRIVATE_MAIN_USER }}/.env
+            echo ".env 파일 삭제"
         
           INNER_EOF
         
