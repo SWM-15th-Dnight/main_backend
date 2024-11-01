@@ -66,13 +66,13 @@ jobs:
         
           # 내부에서 사용할 env 파일 생성
           touch .env
-          echo "CALINIFY_DATABASE_HOST=${{ secrets.CALINIFY_PROD_RDS_HOST }}" > .env
-          echo "CALINIFY_DATABASE_PASSWORD=${{ secrets.CALINIFY_PROD_RDS_PASSWORD }}" > .env
-          echo "CALINIFY_DATABASE_PORT=${{ secrets.CALINIFY_PROD_RDS_PORT }}" > .env
-          echo "CALINIFY_DATABASE_TABLE_NAME=${{ secrets.CALINIFY_PROD_RDS_TABLE_NAME }}" > .env
-          echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_PROD_RDS_USERNAME }}" > .env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" > .env
-          echo "AI_SERVER_URL=${{ secrets.PROD_AI_SERVER_URL }}" > .env
+          echo "CALINIFY_DATABASE_HOST=${{ secrets.CALINIFY_PROD_RDS_HOST }}" >> .env
+          echo "CALINIFY_DATABASE_PASSWORD=${{ secrets.CALINIFY_PROD_RDS_PASSWORD }}" >> .env
+          echo "CALINIFY_DATABASE_PORT=${{ secrets.CALINIFY_PROD_RDS_PORT }}" >> .env
+          echo "CALINIFY_DATABASE_TABLE_NAME=${{ secrets.CALINIFY_PROD_RDS_TABLE_NAME }}" >> .env
+          echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_PROD_RDS_USERNAME }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "AI_SERVER_URL=${{ secrets.PROD_AI_SERVER_URL }}" >> .env
         
           # Private EC2에 env 파일과 키 파일 전송
           scp -i private_main_key.pem -o StrictHostKeyChecking=no .env private_main_key.pem ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }}:/home/${{ env.PRIVATE_MAIN_USER }}/
@@ -106,7 +106,7 @@ jobs:
             sudo docker run -d --name core-backend-dev --env-file /home/${{ env.PRIVATE_MAIN_USER }}/.env -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
             echo "Docker run success"
             
-            rm -f /home/${{ env.PRIVATE_MAIN_USER }}/.env
+            # rm -f /home/${{ env.PRIVATE_MAIN_USER }}/.env
             echo ".env 파일 삭제"
         
           INNER_EOF
