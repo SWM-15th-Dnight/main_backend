@@ -65,7 +65,7 @@ jobs:
           chmod 600 private_main_key.pem
         
           # 내부에서 사용할 env 파일 생성
-          cat << 'EOT' > .env
+          cat << EOT > .env
           CALINIFY_DATABASE_HOST=${{ secrets.CALINIFY_PROD_RDS_HOST }}
           CALINIFY_DATABASE_PASSWORD=${{ secrets.CALINIFY_PROD_RDS_PASSWORD }}
           CALINIFY_DATABASE_PORT=${{ secrets.CALINIFY_PROD_RDS_PORT }}
