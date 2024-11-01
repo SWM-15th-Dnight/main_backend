@@ -64,7 +64,7 @@ jobs:
           
           chmod 600 private_main_key.pem
         
-          ssh -i private_ec2_key.pem ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }} << 'INNER_EOF'
+          ssh -i private_main_key.pem ${{ env.PRIVATE_MAIN_USER }}@${{ env.PRIVATE_MAIN_HOST }} << 'INNER_EOF'
         
             # Login to ECR
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
