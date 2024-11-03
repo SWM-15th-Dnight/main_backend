@@ -76,6 +76,8 @@ jobs:
           echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_PROD_RDS_USERNAME }}" >> .env
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
           echo "AI_SERVER_URL=${{ secrets.PROD_AI_SERVER_URL }}" >> .env
+          # 배포 프로필 설정
+          echo "SPRING_PROFILES_ACTIVE=prod" >> .env
           echo "=====.env 파일 생성 완료====="
         
           # Private EC2에 env 파일과 키 파일 전송
