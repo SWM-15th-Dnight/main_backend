@@ -52,7 +52,7 @@ class AuthService(
 
         val newUser = userRepository.save(user)
 
-        val accountLinkEntity = AccountLinkEntity(newUser.userId!!, newUser, null, null)
+        val accountLinkEntity = AccountLinkEntity(newUser.userId!!, newUser, null)
 
         newUser.addAccountLink(accountLinkEntity)
 
@@ -61,7 +61,10 @@ class AuthService(
 
     @Transactional
     fun createGoogleUser(googleUserCreateDTO: GoogleUserCreateDTO) : UserCreateResponseDTO {
-        val user = GoogleUserCreateDTO.toEntity(googleUserCreateDTO)
+
+        val googleUserPassword = passwordEncoder.encode(googleUserCreateDTO.uid)
+
+        val user = GoogleUserCreateDTO.toEntity(googleUserCreateDTO, googleUserPassword)
         val newUser = userRepository.save(user)
 
         val accountLink = AccountLinkEntity(newUser.userId!!, newUser, google = googleUserCreateDTO.uid)

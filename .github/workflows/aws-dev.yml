@@ -52,6 +52,7 @@ jobs:
         echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_DATABASE_USERNAME }}" >> .env
         echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
         echo "AI_SERVER_URL=${{ secrets.AI_SERVER_URL }}" >> .env
+        echo "SPRING_PROFILES_ACTIVE=dev" >> .env
         
     - name: Setup SSH
       uses: webfactory/ssh-agent@v0.5.3
@@ -64,7 +65,7 @@ jobs:
         scp -o StrictHostKeyChecking=no .env ${{ secrets.CALINIFY_EC2_USER }}@${{ secrets.CALINIFY_EC2_HOST }}:/home/${{ env.EC2_USER }}/.env
         ssh -o StrictHostKeyChecking=no ${{ secrets.CALINIFY_EC2_USER }}@${{ secrets.CALINIFY_EC2_HOST }} << 'EOF'
           # Login to ECR
-          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+          aws ecr get-login-password --region ap-northeast-2 | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
           sudo docker login -u AWS -p $(aws ecr get-login-password --region ap-northeast-2) ${{ steps.login-ecr.outputs.registry }}
 
