@@ -22,9 +22,10 @@ data class GoogleUserCreateDTO(
     val phoneNumber : String? = null,
 ) {
     companion object {
-        fun toEntity(data : GoogleUserCreateDTO) : UserEntity {
+        fun toEntity(data : GoogleUserCreateDTO, googleUserPassword : String) : UserEntity {
             return UserEntity(
                 email = data.email,
+                password = googleUserPassword,
                 userName = data.name,
                 gender = data.gender,
                 phoneNumber = data.phoneNumber,
