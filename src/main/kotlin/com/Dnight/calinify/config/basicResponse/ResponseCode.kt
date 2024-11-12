@@ -61,6 +61,7 @@ enum class ResponseCode(val statusCode: Int, var message: String) {
     DataSaveFailed(500, "데이터 저장 실패"),
     DeleteFailed(500, "리소스 삭제 실패"),
 
-    AiRequestFail(500, "Ai 서버와 통신 실패")
+    AiRequestFail(500, "Ai 서버와 통신 실패"),
+    TransportRequestFail(500, "Transport 서버와 통신 실패")
     ;
 }
