@@ -1,4 +1,4 @@
-package com.dnight.calinify.ai_process.module
+package com.dnight.calinify.webclient_module
 
 import io.netty.channel.ChannelOption
 import org.springframework.beans.factory.annotation.Value
@@ -24,14 +24,30 @@ class WebClientConfig {
     @Value("\${connect-server.ai-server.base-url}")
     private lateinit var aiServicePath: String
 
-    @Bean
-    fun aiRequestBuilder(): WebClient.Builder {
-        val httpClient = HttpClient.create()
+    @Value("\${connect-server.transport-server.base-url:http://localhost:5051}")
+    private lateinit var transportServerPath: String
+
+    // 공통 HttpClient 설정
+    private fun httpClient(): HttpClient {
+        return HttpClient.create()
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 15000)
             .responseTimeout(Duration.ofMillis(15000))
+    }
+
+    private fun webClientBuilder(baseUrl: String): WebClient.Builder {
         return WebClient.builder()
-            .baseUrl(aiServicePath)
-            .clientConnector(ReactorClientHttpConnector(httpClient))
+            .baseUrl(baseUrl)
+            .clientConnector(ReactorClientHttpConnector(httpClient()))
             .defaultHeader("Content-Type", "application/json")
+    }
+
+    @Bean
+    fun aiRequestBuilder(): WebClient.Builder {
+        return webClientBuilder(aiServicePath)
+    }
+
+    @Bean
+    fun transportRequestBuilder(): WebClient.Builder {
+        return webClientBuilder(transportServerPath)
     }
 }

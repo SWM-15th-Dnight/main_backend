@@ -21,3 +21,5 @@ jwt:
 connect-server:
   ai-server:
     base-url: ${AI_SERVER_URL}
+  transport-server:
+    base-url: ${TRANSPORT_SERVER_URL}

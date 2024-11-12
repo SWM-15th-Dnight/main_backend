@@ -1,4 +1,4 @@
-package com.dnight.calinify.ai_process.module
+package com.dnight.calinify.webclient_module
 
 import com.dnight.calinify.ai_process.dto.to_ai.request.AiRequestDTO
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiResponseDTO

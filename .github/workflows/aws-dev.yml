@@ -52,6 +52,7 @@ jobs:
         echo "CALINIFY_DATABASE_USERNAME=${{ secrets.CALINIFY_DATABASE_USERNAME }}" >> .env
         echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
         echo "AI_SERVER_URL=${{ secrets.AI_SERVER_URL }}" >> .env
+        echo "TRANSPORT_SERVER_URL=${{ secrets.TRANSPORT_SERVER_URL }}" >> .env
         echo "SPRING_PROFILES_ACTIVE=dev" >> .env
         
     - name: Setup SSH
