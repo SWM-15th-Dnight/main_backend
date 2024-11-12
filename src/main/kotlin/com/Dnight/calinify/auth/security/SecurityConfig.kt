@@ -42,6 +42,8 @@ class SecurityConfig(
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/api/v1/auth/**", permitAll)
+                authorize("/health-check", permitAll)
+                authorize("/", permitAll)
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {

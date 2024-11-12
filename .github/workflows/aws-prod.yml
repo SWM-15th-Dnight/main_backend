@@ -96,7 +96,7 @@ jobs:
         
             # Login to ECR
             echo "=====Private ec2 server 진입 성공 및 ECR login===="
-            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+            aws ecr get-login-password --region ap-northeast-2 | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
             echo "=====ECR login 성공====="
         
             # Pull the Docker image

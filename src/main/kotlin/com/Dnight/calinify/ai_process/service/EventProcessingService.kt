@@ -7,8 +7,6 @@ import com.dnight.calinify.ai_process.dto.to_ai.request.AiImageProcessingRequest
 import com.dnight.calinify.ai_process.dto.to_ai.request.AiPlainTextProcessingRequestDTO
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiImageProcessedResponseDTO
 import com.dnight.calinify.ai_process.dto.to_ai.response.AiPlainTextProcessedResponseDTO
-import com.dnight.calinify.ai_process.module.ImageRequest
-import com.dnight.calinify.ai_process.module.PlainTextRequest
 import com.dnight.calinify.ai_process.repository.AiProcessingEventRepository
 import com.dnight.calinify.ai_process.repository.AiProcessingStatisticsRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
@@ -16,6 +14,8 @@ import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.config.exception.DontRollbackException
 import com.dnight.calinify.config.exception.ServerSideException
 import com.dnight.calinify.user.repository.UserRepository
+import com.dnight.calinify.webclient_module.ImageRequest
+import com.dnight.calinify.webclient_module.PlainTextRequest
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus

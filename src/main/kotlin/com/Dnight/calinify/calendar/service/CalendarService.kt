@@ -8,6 +8,7 @@ import com.dnight.calinify.calendar.repository.CalendarRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.config.basicResponse.ResponseOk
 import com.dnight.calinify.config.exception.ClientException
+import com.dnight.calinify.event.entity.EventMainEntity
 import com.dnight.calinify.event.repository.EventMainRepository
 import com.dnight.calinify.user.repository.UserRepository
 import jakarta.transaction.Transactional
@@ -59,6 +60,11 @@ class CalendarService(
         calendar.title = calendarUpdateData.title
         calendar.description = calendarUpdateData.description
         calendar.colorSetId = calendarUpdateData.colorSetId
+
+        // 이벤트 colorSetId 수정
+        val events : List<EventMainEntity> = eventMainRepository.findAllByCalendarCalendarId(calendarId = calendar.calendarId)
+        events.forEach { event -> event.colorSetId = calendarUpdateData.colorSetId }
+
         calendar.timezoneId = calendarUpdateData.timezoneId
         calendar.isDeleted = calendarUpdateData.isDeleted
 
