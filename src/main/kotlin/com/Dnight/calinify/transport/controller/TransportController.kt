@@ -37,7 +37,7 @@ class TransportController(
     fun icsExport(@RequestParam calendarId : Long,
                   @AuthenticationPrincipal userDetails: UserDetails,) : ResponseEntity<Resource>{
         val userId = userDetails.username.toLong()
-        val filePath: String = transportService.icsExport(calendarId, userId)
+        val filePath: String = transportService.icsExport(userId = userId, calendarId = calendarId)
         val path: Path = Paths.get(filePath)
         val resource: Resource = UrlResource(path.toUri())
 

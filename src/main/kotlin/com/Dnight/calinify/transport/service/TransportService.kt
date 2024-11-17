@@ -28,7 +28,7 @@ class TransportService(
     @Transactional
     fun icsExport(userId: Long, calendarId : Long) : String {
 
-        val exportResultResponse = icsExportRequest.request(userId, calendarId)
+        val exportResultResponse = icsExportRequest.request(userId = userId, calendarId = calendarId)
 
         return exportResultResponse
     }
