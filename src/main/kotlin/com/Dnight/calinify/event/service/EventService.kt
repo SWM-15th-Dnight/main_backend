@@ -57,9 +57,6 @@ class EventService(
     @Transactional
     fun createEvent(eventCreateDTO: EventCreateRequestDTO, userId : Long) : EventResponseDTO {
 
-        //TODO 일정 입력 시, 바쁜 시간대에 추가로 일정이 있는지 없는지 체크하는 기능...
-        //일정을 검색하는 방법에 대해 생각해보자...
-
         // get calendar
         val calendarEntity = calendarRepository.findByCalendarIdAndUserUserId(eventCreateDTO.calendarId, userId)
             ?: throw ClientException(ResponseCode.NotFoundOrNotMatchUser, "calendar")

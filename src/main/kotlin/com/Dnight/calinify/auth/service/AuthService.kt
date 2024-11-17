@@ -6,6 +6,9 @@ import com.dnight.calinify.auth.dto.request.UserCreateRequestDTO
 import com.dnight.calinify.auth.dto.response.TokenResponseDTO
 import com.dnight.calinify.auth.dto.response.UserCreateResponseDTO
 import com.dnight.calinify.auth.jwt.JwtTokenProvider
+import com.dnight.calinify.calendar.dto.request.CalendarCreateDTO
+import com.dnight.calinify.calendar.entity.CalendarEntity
+import com.dnight.calinify.calendar.repository.CalendarRepository
 import com.dnight.calinify.config.basicResponse.ResponseCode
 import com.dnight.calinify.config.exception.ClientException
 import com.dnight.calinify.user.entity.AccountLinkEntity
@@ -23,7 +26,8 @@ class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val accountLinkRepository: AccountLinkRepository
+    private val accountLinkRepository: AccountLinkRepository,
+    private val calendarRepository: CalendarRepository
 ) {
 
     fun login(formLoginDTO: FormLoginDTO): TokenResponseDTO {
@@ -69,6 +73,10 @@ class AuthService(
 
         val accountLink = AccountLinkEntity(newUser.userId!!, newUser, google = googleUserCreateDTO.uid)
         accountLinkRepository.save(accountLink)
+
+        val defaultCalendar : CalendarEntity = CalendarCreateDTO.toEntity(
+            CalendarCreateDTO("일정", "기본 캘린더입니다.", "Asia/Seoul", 1), user)
+        calendarRepository.save(defaultCalendar)
 
         return UserCreateResponseDTO.from(newUser)
     }
