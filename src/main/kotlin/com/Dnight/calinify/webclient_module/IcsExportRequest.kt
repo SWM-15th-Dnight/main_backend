@@ -52,7 +52,7 @@ class IcsExportRequest (
                 .block() ?: throw ServerSideException(ResponseCode.TransportRequestFail)
             // 저장 경로 지정
             val rootPath = Paths.get("").toAbsolutePath().toString()
-            val icsRepPath = rootPath + "/src/main/resources/ics_tmp/"
+            val icsRepPath = "$rootPath/ics_tmp/"
 
             val outputPath = Paths.get(icsRepPath+resource.body!!.filename)
 

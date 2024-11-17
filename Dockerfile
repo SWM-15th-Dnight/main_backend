@@ -14,6 +14,8 @@ WORKDIR /root/
 # 시간대 설정
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && echo "Asia/Seoul" > /etc/timezone
 
+RUN mkdir -p /root/ics_tmp && chmod 755 /root/ics_tmp
+
 # 빌드 스테이지에서 생성된 JAR 파일을 복사
 COPY --from=build /app/build/libs/*.jar /root/app.jar
 
